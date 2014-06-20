@@ -1,11 +1,11 @@
-/*global define, Modernizr*/
+/*global define */
 define(['jquery', 'underscore'], function ($, _) {
     'use strict';
     var Obstacle;
 
-    Obstacle = function(data){
+    Obstacle = function (data) {
         this.data = _.extend({}, {
-            sprite: '',
+            sprite: null,
             chance: 0,
             x: 0,
             y: 0
