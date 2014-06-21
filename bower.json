@@ -1,5 +1,5 @@
 {
-    "name": "rektbirds UI",
+    "name": "rektbirds",
     "version": "0.0.1",
     "dependencies": {
         "modernizr": "~2.6.2",

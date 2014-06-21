@@ -4,14 +4,11 @@ define(['jquery', 'underscore', 'easel', 'render_service', 'game_states'], funct
     var GameService,
         instance;
 
-    GameService = function (options) {
+    GameService = function () {
         var that = this;
 
-        that.data = _.extend({}, {
-            state: GameStates.pausing
-        }, options);
-
-        that.render = new RenderService();
+        this.render = new RenderService();
+        this.state = new GameStates(this, this.render);
 
         $('body').keyup(function (e) {
             that.keyUp(e);
@@ -19,24 +16,17 @@ define(['jquery', 'underscore', 'easel', 'render_service', 'game_states'], funct
     };
 
     GameService.prototype.load = function () {
-        var self = this;
-        self.data.state.init(self.render);
+        this.state.init(this.render);
     };
 
     GameService.prototype.keyUp = function (e) {
-        instance.data.state.keyUp(e, instance);
+        instance.state.keyUp(e, instance);
     };
 
-    GameService.prototype.switchState = function (state) {
-        var self = this;
-        self.data.state = state;
-        self.load();
-    };
-
-    return function (options) {
+    return function () {
         // singleton
         return instance || (function () {
-            instance = new GameService(options);
+            instance = new GameService();
             instance.load();
             return instance;
         }());

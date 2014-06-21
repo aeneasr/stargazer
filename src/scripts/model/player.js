@@ -1,5 +1,5 @@
 /*global define */
-define(['jquery', 'underscore'], function ($, _) {
+define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     'use strict';
     var Player,
         States;
@@ -9,20 +9,37 @@ define(['jquery', 'underscore'], function ($, _) {
         alive: 2
     };
 
-    Player = function (data) {
-        this.data = _.extend({}, {
-            sprite: null,
-            position: {
-                x: 0,
-                y: 0
-            },
-            state: States.alive
-        }, data);
+    Player = function () {
+        var circle = new createjs.Shape(),
+            self = this;
+
+        circle.graphics.beginFill("red").drawCircle(0, 0, 20);
+        circle.x = 50;
+        circle.y = 500;
+
+        this.state = States.alive;
+        this.velocity = 0;
+        this.gravity = 0.1;
+        this.object = circle;
+
+        createjs.Ticker.addEventListener('tick', function (event) {
+            var ticker = event.delta / 10;
+
+            self.object.y += ticker * self.velocity;
+
+            self.velocity += self.gravity;
+        });
     };
 
-    return {
-        init: function (data) {
-            return new Player(data);
-        }
+    Player.prototype.getObject = function () {
+        return this.object;
+    };
+
+    Player.prototype.push = function () {
+        this.velocity = -3;
+    };
+
+    return function () {
+        return new Player();
     };
 });

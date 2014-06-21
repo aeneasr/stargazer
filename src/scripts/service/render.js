@@ -7,13 +7,28 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     RenderService = function (canvas) {
         this.stage = new createjs.Stage(canvas);
 
-        // var circle = new createjs.Shape();
-        // circle.graphics.beginFill("red").drawCircle(0, 0, 50);
-        // circle.x = circle.y = 60;
-        // stage.addChild(circle);
+        $(window).bind('resize', this.resize);
 
         createjs.Ticker.addEventListener('tick', this.update);
         createjs.Ticker.setFPS(60);
+    };
+
+    RenderService.prototype.resize = function () {
+        var w = window.innerWidth,
+            h = window.innerHeight,
+            ow = 1920,
+            oh = 1080,
+            stage = instance.stage,
+            scale = Math.min(w / ow, h / oh);
+
+        stage.scaleX = scale;
+        stage.scaleY = scale;
+
+        // adjust canvas size
+        stage.canvas.width = ow * scale;
+        stage.canvas.height = oh * scale;
+
+        stage.update();
     };
 
     RenderService.prototype.update = function (event) {
@@ -28,6 +43,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         // singleton
         return instance || (function () {
             instance = new RenderService(options);
+            instance.resize();
             return instance;
         }());
     };
