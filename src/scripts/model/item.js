@@ -1,9 +1,9 @@
 /*global define */
 define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     'use strict';
-    var Obstacle;
+    var Item;
 
-    Obstacle = function (data) {
+    Item = function (data) {
         var self = this;
 
         this.velocity = data.velocity;
@@ -18,6 +18,6 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     return function (data) {
-        return new Obstacle(data);
+        return new Item(data);
     };
 });

@@ -7,8 +7,8 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     GameStates = function (game, render) {
         this.game = game;
         this.render = render;
-        this.state = new PlayingLogic(this.game, this.render, this);
         this.children = [];
+        this.state = new PlayingLogic(this.game, this.render, this);
     };
 
     GameStates.prototype.switchState = function (state) {
@@ -34,6 +34,14 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     GameStates.prototype.addChild = function (child) {
         this.children.push(child);
         this.render.getStage().addChild(child);
+    };
+
+    GameStates.prototype.removeChild = function (child) {
+        var index = this.children.indexOf(this.children);
+        if (index > -1) {
+            this.children.splice(index, 1);
+        }
+        this.render.getStage().removeChild(child);
     };
 
     GameStates.prototype.addChildren = function () {

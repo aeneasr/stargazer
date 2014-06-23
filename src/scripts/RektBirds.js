@@ -5,6 +5,12 @@ define("RektBirds", ['jquery', 'render_service', 'game_service'],
         function init(canvas) {
             new RenderService(canvas);
             new GameService();
+
+            $(document).keydown(function (e) {
+                if (e.keyCode === 32) {
+                    return false;
+                }
+            });
         }
 
         return {

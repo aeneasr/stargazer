@@ -24,9 +24,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
 
         createjs.Ticker.addEventListener('tick', function (event) {
             var ticker = event.delta / 10;
-
             self.object.y += ticker * self.velocity;
-
             self.velocity += self.gravity;
         });
     };
