@@ -1,34 +1,30 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'render_service', 'game_states'], function ($, _, createjs, RenderService, GameStates) {
+define(['jquery', 'underscore', 'easel', 'game_states'], function ($, _, createjs, GameStates) {
     'use strict';
     var GameService,
         instance;
 
-    GameService = function () {
+    GameService = function (render) {
         var that = this;
 
-        this.render = new RenderService();
+        this.render = render;
         this.state = new GameStates(this, this.render);
+        this.state.init(this.render);
 
         $('body').keyup(function (e) {
             that.keyUp(e);
         });
     };
 
-    GameService.prototype.load = function () {
-        this.state.init(this.render);
-    };
-
     GameService.prototype.keyUp = function (e) {
         instance.state.keyUp(e, instance);
     };
 
-    return function () {
+    return function (render) {
         // singleton
-        return instance || (function () {
-            instance = new GameService();
-            instance.load();
+        return instance || (function (render) {
+            instance = new GameService(render);
             return instance;
-        }());
+        }(render));
     };
 });

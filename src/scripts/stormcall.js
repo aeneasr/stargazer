@@ -1,10 +1,10 @@
 /*global define, require*/
-define("RektBirds", ['jquery', 'render_service', 'game_service'],
+define("stormcall", ['jquery', 'render_service', 'game_service'],
     function ($, RenderService, GameService) {
 
         function init(canvas) {
-            new RenderService(canvas);
-            new GameService();
+            var render = new RenderService(canvas);
+            new GameService(render);
 
             $(document).keydown(function (e) {
                 if (e.keyCode === 32) {
@@ -21,7 +21,7 @@ define("RektBirds", ['jquery', 'render_service', 'game_service'],
     }
 );
 
-require(['jquery', 'RektBirds'], function ($, App) {
+require(['jquery', 'stormcall'], function ($, App) {
     "use strict";
 
     $(function () {

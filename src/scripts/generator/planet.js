@@ -1,42 +1,33 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, createjs, ObstacleModel) {
+define(['jquery', 'underscore', 'easel', 'model/planet'], function ($, _, createjs, PlanetModel) {
     'use strict';
     var ObstacleGenerator,
         instance,
-        Obstacles;
+        planets;
 
-    Obstacles = [
+    planets = [
         {
-            name: 'brick',
             generate: function () {
                 var b = new createjs.Bitmap('build/images/planets/0.png');
-                b.scaleX = 0.1;
-                b.scaleY = 0.1;
                 return b;
             },
-            velocity: 5,
+            velocity: 1.5,
             chance: 0.2
         },
         {
-            name: 'brick',
             generate: function () {
                 var b = new createjs.Bitmap('build/images/planets/1.png');
-                b.scaleX = 0.1;
-                b.scaleY = 0.1;
                 return b;
             },
-            velocity: 7,
+            velocity: 1,
             chance: 0.8
         },
         {
-            name: 'brick',
             generate: function () {
                 var b = new createjs.Bitmap('build/images/planets/2.png');
-                b.scaleX = 0.1;
-                b.scaleY = 0.1;
                 return b;
             },
-            velocity: 3,
+            velocity: 1,
             chance: 0.2
         }
     ];
@@ -48,20 +39,12 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
         this.state = data.state;
         this.weights = [];
         this.startTime = new Date();
-        this.objects = [];
 
-        _.each(Obstacles, function (v) {
+        _.each(planets, function (v) {
             that.weights.push(v.chance);
         });
 
         createjs.Ticker.addEventListener('tick', this.tick);
-    };
-
-    ObstacleGenerator.prototype.removeObject = function (object) {
-        var index = this.objects.indexOf(object);
-        if (index > -1) {
-            this.objects.splice(index, 1);
-        }
     };
 
     ObstacleGenerator.prototype.clear = function () {
@@ -96,12 +79,12 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
             thing,
             elapsed = 0;
 
-        instance.threshhold -= e.delta;
+        instance.threshhold -= e.delta / 200;
 
         if (instance.threshhold < 0) {
             instance.threshhold = Math.random() * 500;
 
-            item = instance.getRandomItem(Obstacles, instance.weights);
+            item = instance.getRandomItem(planets, instance.weights);
 
             elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
 
@@ -114,13 +97,12 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
             }
 
             thing = item.generate();
-            var m = new ObstacleModel({
+            new PlanetModel({
                 object: thing,
                 velocity: item.velocity * elapsed * instance.rand(80, 100) / 100,
                 states: instance.state
             });
             instance.state.addChild(thing);
-            instance.objects.push(m);
         }
     };
 

@@ -4,20 +4,23 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     var RenderService,
         instance;
 
-    RenderService = function (canvas) {
+    RenderService = function (canvas, width, height) {
         this.stage = new createjs.Stage(canvas);
 
-        $(window).bind('resize', this.resize);
+        $(window).bind('resize', this.resize.bind(this));
 
-        createjs.Ticker.addEventListener('tick', this.update);
+        this.width = width || 1920;
+        this.height = height || 1080;
+
+        createjs.Ticker.addEventListener('tick', this.update.bind(this));
         createjs.Ticker.setFPS(60);
     };
 
     RenderService.prototype.resize = function () {
         var w = window.innerWidth,
             h = window.innerHeight,
-            ow = 1920,
-            oh = 1080,
+            ow = this.width,
+            oh = this.height,
             stage = instance.stage,
             scale = Math.min(w / ow, h / oh);
 
@@ -32,7 +35,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     RenderService.prototype.update = function (event) {
-        instance.stage.update(event);
+        this.stage.update(event);
     };
 
     RenderService.prototype.getStage = function () {

@@ -82,7 +82,8 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
             thing = item.generate();
             new ItemModel({
                 object: thing,
-                velocity: item.velocity * instance.rand(80, 100) / 100
+                velocity: item.velocity * instance.rand(80, 100) / 100,
+                states: instance.state
             });
             instance.state.addChild(thing);
         }

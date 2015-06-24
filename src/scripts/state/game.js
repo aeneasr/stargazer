@@ -41,6 +41,7 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
         if (index > -1) {
             this.children.splice(index, 1);
         }
+        child.removeAllEventListeners();
         this.render.getStage().removeChild(child);
     };
 

@@ -20,31 +20,35 @@ module.exports = function (grunt) {
     };
 
     grunt.initConfig({
-        rektbirds: config,
+        stormcall: config,
         watch: {
             compass: {
-                files: ['<%= rektbirds.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass:server', 'autoprefixer', 'clean:dist', 'copy:dist']
+                files: ['<%= stormcall.app %>/styles/{,*/}*.{scss,sass}'],
+                tasks: ['compass:server', 'autoprefixer', 'clean:dist', 'copy:dist', 'copy:images']
             },
             styles: {
-                files: ['<%= rektbirds.app %>/styles/{,*/}*.css'],
-                tasks: ['copy:styles', 'autoprefixer', 'clean:dist', 'copy:dist']
+                files: ['<%= stormcall.app %>/styles/{,*/}*.css'],
+                tasks: ['copy:styles', 'autoprefixer', 'clean:dist', 'copy:dist', 'copy:images']
             },
             jsLang: {
-                files: ['<%= rektbirds.app %>/lang/*'],
-                tasks: ['i18n', 'clean:dist', 'copy:dist']
+                files: ['<%= stormcall.app %>/lang/*'],
+                tasks: ['i18n', 'clean:dist', 'copy:dist', 'copy:images']
             },
             scripts: {
-                files: ['<%= rektbirds.app %>/scripts/{,*/}*.js'],
-                tasks: ['jshint', 'copy:requirejs', 'requirejs:production', 'clean:dist', 'copy:dist']
+                files: ['<%= stormcall.app %>/scripts/{,*/}*.js', '<%= stormcall.app %>/**/*.js'],
+                tasks: ['jshint', 'copy:requirejs', 'requirejs:production', 'clean:dist', 'copy:dist', 'copy:images'],
+                options: {
+                    // Start a live reload server on the default port 35729
+                    livereload: true
+                }
             },
             images: {
-                files: ['<%= rektbirds.app %>/images/{,*/}*.{png,jpg,jpeg}'],
-                tasks: ['imagemin', 'clean:dist', 'copy:dist']
+                files: ['<%= stormcall.app %>/images/{,*/}*.{png,jpg,jpeg}'],
+                tasks: ['imagemin', 'clean:dist', 'copy:dist', 'copy:images']
             },
             fonts: {
-                files: ['<%= rektbirds.app %>/styles/fonts/*'],
-                tasks: ['copy:tmp', 'clean:dist', 'copy:dist']
+                files: ['<%= stormcall.app %>/styles/fonts/*'],
+                tasks: ['copy:tmp', 'clean:dist', 'copy:dist', 'copy:images']
             }
         },
         clean: {
@@ -52,8 +56,8 @@ module.exports = function (grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        '<%= rektbirds.tmp %>/*',
-                        '!<%= rektbirds.tmp %>/.git*'
+                        '<%= stormcall.tmp %>/*',
+                        '!<%= stormcall.tmp %>/.git*'
                     ]
                 }]
             },
@@ -61,35 +65,35 @@ module.exports = function (grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        '<%= rektbirds.dist %>/*',
-                        '!<%= rektbirds.dist %>/.git*'
+                        '<%= stormcall.dist %>/*',
+                        '!<%= stormcall.dist %>/.git*'
                     ]
                 }]
             },
-            server: '<%= rektbirds.tmp %>'
+            server: '<%= stormcall.tmp %>'
         },
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
                 ignores: [
-                    '<%= rektbirds.app %>/scripts/thirdparty/{,*/}*.js',
-                    '<%= rektbirds.app %>/scripts/modules/rektbirds_i18n.js',
-                    '<%= rektbirds.app %>/scripts/libs/polyfills.js'
+                    '<%= stormcall.app %>/scripts/thirdparty/{,*/}*.js',
+                    '<%= stormcall.app %>/scripts/modules/stormcall_i18n.js',
+                    '<%= stormcall.app %>/scripts/libs/polyfills.js'
                 ]
             },
             all: [
-                '<%= rektbirds.app %>/scripts/{,*/}*.js'
+                '<%= stormcall.app %>/scripts/{,*/}*.js'
             ]
         },
         compass: {
             options: {
-                sassDir: '<%= rektbirds.app %>/styles',
-                cssDir: '<%= rektbirds.tmp %>/styles',
-                generatedImagesDir: '<%= rektbirds.tmp %>/images/generated',
-                imagesDir: '<%= rektbirds.app %>/images',
-                javascriptsDir: '<%= rektbirds.app %>/scripts',
-                fontsDir: '<%= rektbirds.app %>/styles/fonts',
-                importPath: '<%= rektbirds.app %>/bower_components',
+                sassDir: '<%= stormcall.app %>/styles',
+                cssDir: '<%= stormcall.tmp %>/styles',
+                generatedImagesDir: '<%= stormcall.tmp %>/images/generated',
+                imagesDir: '<%= stormcall.app %>/images',
+                javascriptsDir: '<%= stormcall.app %>/scripts',
+                fontsDir: '<%= stormcall.app %>/styles/fonts',
+                importPath: '<%= stormcall.app %>/bower_components',
                 httpImagesPath: '/images',
                 httpGeneratedImagesPath: '/images/generated',
                 httpFontsPath: '/styles/fonts',
@@ -97,7 +101,7 @@ module.exports = function (grunt) {
             },
             tmp: {
                 options: {
-                    generatedImagesDir: '<%= rektbirds.tmp %>/images/generated'
+                    generatedImagesDir: '<%= stormcall.tmp %>/images/generated'
                 }
             },
             server: {
@@ -113,16 +117,16 @@ module.exports = function (grunt) {
             tmp: {
                 files: [{
                     expand: true,
-                    cwd: '<%= rektbirds.tmp %>/styles/',
+                    cwd: '<%= stormcall.tmp %>/styles/',
                     src: '{,*/}*.css',
-                    dest: '<%= rektbirds.tmp %>/styles/'
+                    dest: '<%= stormcall.tmp %>/styles/'
                 }]
             }
         },
         'bower-install': {
             app: {
-                html: '<%= rektbirds.app %>/index.html',
-                ignorePath: '<%= rektbirds.app %>/'
+                html: '<%= stormcall.app %>/index.html',
+                ignorePath: '<%= stormcall.app %>/'
             }
         },
         uglify: {
@@ -142,11 +146,11 @@ module.exports = function (grunt) {
                     mangle: true
                 },
                 // files: {
-                //     '<%= rektbirds.tmp %>/scripts/main.js': '<%= rektbirds.tmp %>/scripts/main.js'
+                //     '<%= stormcall.tmp %>/scripts/main.js': '<%= stormcall.tmp %>/scripts/main.js'
                 // }
                 files: [{
-                    '<%= rektbirds.tmp %>/scripts/main.js': '<%= rektbirds.tmp %>/scripts/main.js',
-                    '<%= rektbirds.tmp %>/bower_components/requirejs/require.js': '<%= rektbirds.tmp %>/bower_components/requirejs/require.js'
+                    '<%= stormcall.tmp %>/scripts/main.js': '<%= stormcall.tmp %>/scripts/main.js',
+                    '<%= stormcall.tmp %>/bower_components/requirejs/require.js': '<%= stormcall.tmp %>/bower_components/requirejs/require.js'
                 }]
             }
         },
@@ -154,9 +158,9 @@ module.exports = function (grunt) {
             tmp: {
                 files: [{
                     expand: true,
-                    cwd: '<%= rektbirds.app %>/images',
+                    cwd: '<%= stormcall.app %>/images',
                     src: '{,*/}*.{png,jpg,jpeg}',
-                    dest: '<%= rektbirds.tmp %>/images'
+                    dest: '<%= stormcall.tmp %>/images'
                 }]
             }
         },
@@ -164,18 +168,18 @@ module.exports = function (grunt) {
             tmp: {
                 files: [{
                     expand: true,
-                    cwd: '<%= rektbirds.app %>/images',
+                    cwd: '<%= stormcall.app %>/images',
                     src: '{,*/}*.svg',
-                    dest: '<%= rektbirds.tmp %>/images'
+                    dest: '<%= stormcall.tmp %>/images'
                 }]
             }
         },
         cssmin: {
             minify: {
                 expand: true,
-                cwd: '<%= rektbirds.tmp %>/styles/',
+                cwd: '<%= stormcall.tmp %>/styles/',
                 src: ['*.css', '!*.min.css'],
-                dest: '<%= rektbirds.tmp %>/styles/',
+                dest: '<%= stormcall.tmp %>/styles/',
                 ext: '.css'
             }
         },
@@ -185,8 +189,8 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= rektbirds.app %>',
-                    dest: '<%= rektbirds.tmp %>',
+                    cwd: '<%= stormcall.app %>',
+                    dest: '<%= stormcall.tmp %>',
                     src: [
                         '.htaccess',
                         'styles/fonts/{,*/}*.*',
@@ -198,46 +202,53 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= rektbirds.tmp %>',
-                    dest: '<%= rektbirds.dist %>',
+                    cwd: '<%= stormcall.tmp %>',
+                    dest: '<%= stormcall.dist %>',
                     src: [
                         '**'
                     ]
                 }]
             },
+            images: {
+                expand: true,
+                dot: true,
+                cwd: '<%= stormcall.app %>/images',
+                dest: '<%= stormcall.dist %>/images/',
+                src: '{,*/}*.{png,jpg,jpeg,svg}'
+            },
             styles: {
                 expand: true,
                 dot: true,
-                cwd: '<%= rektbirds.app %>/styles',
-                dest: '<%= rektbirds.tmp %>/styles/',
+                cwd: '<%= stormcall.app %>/styles',
+                dest: '<%= stormcall.tmp %>/styles/',
                 src: '{,*/}*.css'
             },
             requirejs: {
                 expand: true,
                 dot: true,
-                cwd: '<%= rektbirds.app %>/bower_components/requirejs',
-                dest: '<%= rektbirds.tmp %>/bower_components/requirejs',
+                cwd: '<%= stormcall.app %>/bower_components/requirejs',
+                dest: '<%= stormcall.tmp %>/bower_components/requirejs',
                 src: 'require.js'
             },
             modernizr: {
                 expand: true,
                 dot: true,
-                cwd: '<%= rektbirds.app %>/bower_components/modernizr',
-                dest: '<%= rektbirds.tmp %>/bower_components/modernizr',
+                cwd: '<%= stormcall.app %>/bower_components/modernizr',
+                dest: '<%= stormcall.tmp %>/bower_components/modernizr',
                 src: 'modernizr.js'
             }
         },
         i18n: {
-            src: ['<%= rektbirds.app %>/lang/*.json'],
-            dest: '<%= rektbirds.app %>/scripts/modules/rektbirds_i18n.js'
+            src: ['<%= stormcall.app %>/lang/*.json'],
+            dest: '<%= stormcall.app %>/scripts/modules/stormcall_i18n.js'
         },
         modernizr: {
-            devFile: '<%= rektbirds.app %>/bower_components/modernizr/modernizr.js',
-            outputFile: '<%= rektbirds.tmp %>/bower_components/modernizr/modernizr.js',
+            devFile: '<%= stormcall.app %>/bower_components/modernizr/modernizr.js',
+            outputFile: '<%= stormcall.tmp %>/bower_components/modernizr/modernizr.js',
             files: [
-                '<%= rektbirds.tmp %>/scripts/{,*/}*.js',
-                '<%= rektbirds.tmp %>/styles/{,*/}*.css',
-                '!<%= rektbirds.tmp %>/scripts/vendor/*'
+                '<%= stormcall.tmp %>/scripts/{,*/}*.js',
+                '<%= stormcall.tmp %>/styles/{,*/}*.css',
+                '!<%= stormcall.tmp %>/scripts/vendor/*'
             ],
             uglify: true
         },
@@ -264,9 +275,9 @@ module.exports = function (grunt) {
         requirejs: {
             production: {
                 options: {
-                    baseUrl: "<%= rektbirds.app %>/scripts",
+                    baseUrl: "<%= stormcall.app %>/scripts",
                     mainConfigFile: "src/scripts/main.js",
-                    out: "<%= rektbirds.tmp %>/scripts/main.js",
+                    out: "<%= stormcall.tmp %>/scripts/main.js",
                     preserveLicenseComments: false,
                     optimize: 'none'
                 }
@@ -274,9 +285,9 @@ module.exports = function (grunt) {
             testing: {
                 options: {
                     name: 'ATHENE2-TEST',
-                    baseUrl: "<%= rektbirds.app %>/tests/modules",
+                    baseUrl: "<%= stormcall.app %>/tests/modules",
                     mainConfigFile: "src/tests/modules/specRunner.js",
-                    out: "<%= rektbirds.tmp %>/scripts/main.js",
+                    out: "<%= stormcall.tmp %>/scripts/main.js",
                     preserveLicenseComments: false,
                     optimize: 'none'
                 }
@@ -284,20 +295,29 @@ module.exports = function (grunt) {
         },
         "language-update": {
             src: [
-                '<%= rektbirds.app %>/scripts/{,*/}*.js'
+                '<%= stormcall.app %>/scripts/{,*/}*.js'
             ],
             langSrc: [
-                '<%= rektbirds.app %>/lang/*.json'
+                '<%= stormcall.app %>/lang/*.json'
             ],
-            dest: '<%= rektbirds.app %>/lang-processed'
+            dest: '<%= stormcall.app %>/lang-processed'
         },
         concat: {
             test: {
                 src: [
-                    '<%= rektbirds.app %>/bower_components/jasmine/lib/jasmine-core/jasmine.css',
-                    '<%= rektbirds.tmp %>/styles/main.css'
+                    '<%= stormcall.app %>/bower_components/jasmine/lib/jasmine-core/jasmine.css',
+                    '<%= stormcall.tmp %>/styles/main.css'
                 ],
-                dest: '<%= rektbirds.tmp %>/styles/main.css'
+                dest: '<%= stormcall.tmp %>/styles/main.css'
+            }
+        },
+        connect: {
+            server: {
+                options: {
+                    port: 9001,
+                    base: './app/',
+                    open: true
+                }
             }
         }
     });
@@ -317,6 +337,8 @@ module.exports = function (grunt) {
             'copy:modernizr',
             'clean:dist',
             'copy:dist',
+            'copy:images',
+            'connect',
             'watch'
         ]);
     });
