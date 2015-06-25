@@ -1,6 +1,6 @@
 /*global require*/
 require.config({
-    name: 'stormcall',
+    name: 'stargazer',
     baseUrl: "/build/scripts",
     paths: {
         "jquery": "../bower_components/jquery/jquery",
@@ -29,7 +29,7 @@ require.config({
             deps: ['easel'],
             exports: 'Tween'
         },
-        stormcall: {
+        stargazer: {
             deps: ['bootstrap']
         }
     },
