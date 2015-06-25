@@ -36,7 +36,8 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
             var ticker = e.delta / 20;
             v.object.x -= v.velocity * ticker;
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
-                console.log("death");
+                //console.log("death");
+                instance.state.switchState('dying');
             }
             if (v.object.x < 0 - v.object.image.width) {
                 instance.state.removeChild(v.object);
@@ -49,7 +50,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
     Logic.prototype.createObjects = function (items) {
         this.points = 0;
 
-        this.itemGenerator = new PlanetGenerator({state: this.state});
+        this.planetGenerator = new PlanetGenerator({state: this.state});
         this.background = new createjs.Bitmap('build/images/bg/0.png');
         this.backgrounds = [];
         for (var i = 6; i > 0; i--) {
@@ -111,6 +112,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         createjs.Ticker.removeEventListener('tick', this.tick);
         this.generator.clear();
         this.itemGenerator.clear();
+        this.planetGenerator.clear();
     };
 
     return function (game, render, state) {

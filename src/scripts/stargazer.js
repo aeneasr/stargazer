@@ -1,5 +1,5 @@
 /*global define, require*/
-define("stormcall", ['jquery', 'render_service', 'game_service'],
+define("stargazer", ['jquery', 'render_service', 'game_service'],
     function ($, RenderService, GameService) {
 
         function init(canvas) {
@@ -21,7 +21,7 @@ define("stormcall", ['jquery', 'render_service', 'game_service'],
     }
 );
 
-require(['jquery', 'stormcall'], function ($, App) {
+require(['jquery', 'stargazer'], function ($, App) {
     "use strict";
 
     $(function () {
