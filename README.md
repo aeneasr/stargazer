@@ -1,6 +1,8 @@
 stargazer
 =========
 
+[Play now!](http://arekkas.github.io/stargazer/app)
+
 ## Build
 
 * You'll need npm, bower and grunt-cli installed
