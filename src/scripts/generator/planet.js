@@ -8,27 +8,24 @@ define(['jquery', 'underscore', 'easel', 'model/planet'], function ($, _, create
     planets = [
         {
             generate: function () {
-                var b = new createjs.Bitmap('build/images/planets/0.png');
-                return b;
+                return new createjs.Bitmap('build/images/planets/0.png');
             },
             velocity: 1.5,
-            chance: 0.2
+            chance: 0.1
         },
         {
             generate: function () {
-                var b = new createjs.Bitmap('build/images/planets/1.png');
-                return b;
+                return new createjs.Bitmap('build/images/planets/1.png');
             },
             velocity: 1,
-            chance: 0.8
+            chance: 0.1
         },
         {
             generate: function () {
-                var b = new createjs.Bitmap('build/images/planets/2.png');
-                return b;
+                return new createjs.Bitmap('build/images/planets/2.png');
             },
             velocity: 1,
-            chance: 0.2
+            chance: 0.1
         }
     ];
 

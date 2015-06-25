@@ -1,5 +1,5 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dying', 'state/logic/playing'], function ($, _, createjs, PausingLogic, DyingLogic, PlayingLogic) {
+define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dying', 'state/logic/playing', 'state/logic/starting'], function ($, _, createjs, PausingLogic, DyingLogic, PlayingLogic, StartingLogic) {
     'use strict';
     var GameStates,
         instance;
@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
         this.game = game;
         this.render = render;
         this.children = [];
-        this.state = new PlayingLogic(this.game, this.render, this);
+        this.state = new StartingLogic(this.game, this.render, this);
     };
 
     GameStates.prototype.switchState = function (state) {

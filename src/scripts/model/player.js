@@ -35,8 +35,8 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
             self.object.y += ticker * self.velocity;
             self.velocity += self.gravity;
 
-            if (self.object.y > render.height - playerHeight) {
-                self.object.y = render.height - playerHeight;
+            if (self.object.y > render.height - 75 - playerHeight) {
+                self.object.y = render.height - 75 - playerHeight;
                 self.velocity = 0;
             }
 

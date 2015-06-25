@@ -10,8 +10,8 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
             name: 'brick',
             generate: function () {
                 var b = new createjs.Bitmap('build/images/planets/0.png');
-                b.scaleX = 0.1;
-                b.scaleY = 0.1;
+                b.scaleX = 0.2;
+                b.scaleY = 0.2;
                 return b;
             },
             velocity: 5,
@@ -32,8 +32,8 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
             name: 'brick',
             generate: function () {
                 var b = new createjs.Bitmap('build/images/planets/2.png');
-                b.scaleX = 0.1;
-                b.scaleY = 0.1;
+                b.scaleX = 0.3;
+                b.scaleY = 0.3;
                 return b;
             },
             velocity: 3,
@@ -96,7 +96,7 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
             thing,
             elapsed = 0;
 
-        instance.threshhold -= e.delta;
+        instance.threshhold -= e.delta / 5;
 
         if (instance.threshhold < 0) {
             instance.threshhold = Math.random() * 500;

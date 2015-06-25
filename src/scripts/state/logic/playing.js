@@ -15,17 +15,24 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
 
     Logic.prototype.tick = function (e) {
         instance.points += Math.floor(e.delta / 10);
-        instance.fps.text = createjs.Ticker.getMeasuredFPS() | 0;
+        // instance.fps.text = createjs.Ticker.getMeasuredFPS() | 0;
         instance.pointsText.text = instance.points;
 
-        _.each(instance.backgrounds, function(v, k) {
-            v.x -= e.delta / 20 * (k+1);
-            if (v.x < - instance.render.width) {
-                v.x = 0;
+        _.each(instance.backgrounds, function (v, k) {
+            if (k === 0) {
+                v.x -= e.delta / 5 ;
+                if (v.x < -2159) {
+                    v.x = 0;
+                }
+            } else {
+                v.x -= e.delta / 20 * (k + 1);
+                if (v.x < -instance.render.width) {
+                    v.x = 0;
+                }
             }
         });
 
-        _.each(instance.generator.objects, function(v) {
+        _.each(instance.generator.objects, function (v) {
             var ticker = e.delta / 20;
             v.object.x -= v.velocity * ticker;
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
@@ -45,31 +52,47 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         this.itemGenerator = new PlanetGenerator({state: this.state});
         this.background = new createjs.Bitmap('build/images/bg/0.png');
         this.backgrounds = [];
-        for (var i = 5; i > 0; i--) {
+        for (var i = 6; i > 0; i--) {
             var b = new createjs.Shape(),
-                img = document.createElement('img');
+                img = new Image(),
+                self = this;
             img.src = 'build/images/bg/' + i + '.png';
-            b.graphics.beginBitmapFill(img).drawRect(0, 0, this.render.width * 2, this.render.height).endFill();
+            img.onload = function(b, img, self, i) {
+                return function() {
+                    var w = self.render.width * 2,
+                        h = self.render.height;
+                    if (i === 6) {
+                        w = 2159;
+                        h = 100;
+                    }
+                    b.graphics.beginBitmapFill(img, 'repeat-x').drawRect(0, 0, w * 2, h).endFill();
+                };
+            }(b, img, self, i);
             b.x = i * 100;
+            if (i === 6) {
+                b.y = instance.render.height - 100;
+                b.x = 0;
+            }
             this.backgrounds.push(b);
         }
 
         this.player = new PlayerModel(this.render);
         this.generator = new ObstacleGenerator({state: this.state});
         this.itemGenerator = new ItemGenerator({state: this.state});
-        this.pointsText = new createjs.Text('0', '30px Arial');
+        this.pointsText = new createjs.Text('0', '30px Arial', '#ffffff');
         this.pointsText.x = 1800;
+        this.pointsText.y = 20;
 
         this.fuelBox = new FuelBarModel(this.player);
 
-        this.fps = new createjs.Text(createjs.Ticker.getFPS(), '30px Arial', '#000000');
+        // this.fps = new createjs.Text(createjs.Ticker.getFPS(), '30px Arial', '#FFFFFF');
 
         createjs.Ticker.addEventListener('tick', this.tick);
         items.push(this.background);
         _.each(this.backgrounds, function (v) {
             items.push(v);
         });
-        items.push(this.fps);
+        // items.push(this.fps);
         items.push(this.pointsText);
         items.push(this.fuelBox.getObject());
         items.push(this.player.getObject());

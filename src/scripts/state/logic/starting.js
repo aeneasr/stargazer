@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     Logic.prototype.createObjects = function (items) {
-        var t = new createjs.Text("You're dead...", "50px Arial"),
+        var t = new createjs.Text("Hey! Press Space!", "50px Arial"),
             b = t.getBounds();
         t.x = this.render.width / 2 - b.width / 2;
         t.y = this.render.height / 2 - b.height / 2;
@@ -26,7 +26,6 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     Logic.prototype.clear = function () {
-
     };
 
     return function (game, render, state) {
