@@ -1,5 +1,5 @@
 /*global define */
-define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
+define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'], function (_, createjs, BlinkText, Backgrounds) {
     'use strict';
     var Logic,
         instance,
@@ -11,12 +11,24 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         this.state = options.state;
     };
 
+    Logic.prototype.tick = function (e) {
+    };
+
     Logic.prototype.createObjects = function (items) {
-        var t = new createjs.Text("Hey! Press Space!", "50px Arial"),
-            b = t.getBounds();
-        t.x = this.render.width / 2 - b.width / 2;
-        t.y = this.render.height / 2 - b.height / 2;
-        items.push(t);
+        var t = new BlinkText(this.render, 'Ready for a challenge?\nPress Space!');
+        this.background = new Backgrounds(this.render);
+        _.each(this.background.objects, function (v) {
+            items.push(v);
+        });
+        items.push(t.object);
+
+        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashAudioPlugin]);
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.on("fileload", createjs.proxy(function loadHandler() {
+            var ppc = new createjs.PlayPropsConfig().set({loop: -1});
+            //instance.bgmusic = createjs.Sound.play('bgmusic', ppc);
+        }, (this)));
+        createjs.Sound.registerSound('build/sound/stargazer.mp3', 'bgmusic');
     };
 
     Logic.prototype.keyUp = function (e) {

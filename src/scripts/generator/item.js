@@ -7,24 +7,26 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
 
     Items = [
         {
-            name: 'brick',
+            name: 'fuel',
             generate: function () {
-                var circle = new createjs.Shape();
-                circle.graphics.beginFill("red").drawCircle(0, 0, 5);
-                return circle;
+                var b = new createjs.Bitmap('build/images/planets/0.png');
+                b.scaleX = 0.02;
+                b.scaleY = 0.02;
+                return b;
             },
             velocity: 7,
             chance: 0.8
         },
         {
-            name: 'brick',
+            name: 'points',
             generate: function () {
-                var circle = new createjs.Shape();
-                circle.graphics.beginFill("red").drawCircle(0, 0, 5);
-                return circle;
+                var b = new createjs.Bitmap('build/images/planets/1.png');
+                b.scaleX = 0.02;
+                b.scaleY = 0.02;
+                return b;
             },
-            velocity: 3,
-            chance: 0.2
+            velocity: 4,
+            chance: 0.3
         }
     ];
 
@@ -35,6 +37,7 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
         this.state = data.state;
         this.weights = [];
         this.startTime = new Date();
+        this.objects = [];
 
         _.each(Items, function (v) {
             that.weights.push(v.chance);
@@ -72,7 +75,8 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
 
     ItemGenerator.prototype.tick = function (e) {
         var item,
-            thing;
+            thing,
+            m;
 
         instance.threshhold -= e.delta;
 
@@ -80,11 +84,13 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
             instance.threshhold = Math.random() * 20000;
             item = instance.getRandomItem(Items, instance.weights);
             thing = item.generate();
-            new ItemModel({
+            m = new ItemModel({
                 object: thing,
                 velocity: item.velocity * instance.rand(80, 100) / 100,
-                states: instance.state
+                states: instance.state,
+                type: item.name
             });
+            instance.objects.push(m);
             instance.state.addChild(thing);
         }
     };

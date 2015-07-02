@@ -24,11 +24,11 @@ module.exports = function (grunt) {
         watch: {
             compass: {
                 files: ['<%= stargazer.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass:server', 'autoprefixer', 'clean:dist', 'copy:dist', 'copy:images']
+                tasks: ['compass:server', 'autoprefixer', 'clean:dist', 'copy:dist', 'copy:images', 'copy:sounds']
             },
             styles: {
                 files: ['<%= stargazer.app %>/styles/{,*/}*.css'],
-                tasks: ['copy:styles', 'autoprefixer', 'clean:dist', 'copy:dist', 'copy:images']
+                tasks: ['copy:styles', 'autoprefixer', 'clean:dist', 'copy:dist', 'copy:images', 'copy:sounds']
             },
             jsLang: {
                 files: ['<%= stargazer.app %>/lang/*'],
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
             },
             scripts: {
                 files: ['<%= stargazer.app %>/scripts/{,*/}*.js', '<%= stargazer.app %>/**/*.js'],
-                tasks: ['jshint', 'copy:requirejs', 'requirejs:production', 'clean:dist', 'copy:dist', 'copy:images'],
+                tasks: ['jshint', 'copy:requirejs', 'requirejs:production', 'clean:dist', 'copy:dist', 'copy:images', 'copy:sounds'],
                 options: {
                     // Start a live reload server on the default port 35729
                     livereload: true
@@ -44,12 +44,16 @@ module.exports = function (grunt) {
             },
             images: {
                 files: ['<%= stargazer.app %>/images/{,*/}*.{png,jpg,jpeg}'],
-                tasks: ['imagemin', 'clean:dist', 'copy:dist', 'copy:images']
+                tasks: ['imagemin', 'clean:dist', 'copy:dist', 'copy:images', 'copy:sounds']
             },
             fonts: {
                 files: ['<%= stargazer.app %>/styles/fonts/*'],
-                tasks: ['copy:tmp', 'clean:dist', 'copy:dist', 'copy:images']
-            }
+                tasks: ['copy:tmp', 'clean:dist', 'copy:dist', 'copy:images', 'copy:sounds']
+            },
+            sounds: {
+                files: ['<%= stargazer.app %>/sound/{,*/}*.{mp3,ogg}'],
+                tasks: ['copy:sounds']
+            },
         },
         clean: {
             tmp: {
@@ -216,6 +220,13 @@ module.exports = function (grunt) {
                 dest: '<%= stargazer.dist %>/images/',
                 src: '{,*/}*.{png,jpg,jpeg,svg}'
             },
+            sounds: {
+                expand: true,
+                dot: true,
+                cwd: '<%= stargazer.app %>/sound',
+                dest: '<%= stargazer.dist %>/sound/',
+                src: '{,*/}*.{mp3,ogg}'
+            },
             styles: {
                 expand: true,
                 dot: true,
@@ -338,6 +349,7 @@ module.exports = function (grunt) {
             'clean:dist',
             'copy:dist',
             'copy:images',
+            'copy:sounds',
             'connect',
             'watch'
         ]);
@@ -354,6 +366,7 @@ module.exports = function (grunt) {
         'modernizr',
         'uglify',
         'clean:dist',
+        'copy:sounds',
         'copy:dist',
         'clean:tmp'
     ]);

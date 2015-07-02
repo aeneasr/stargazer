@@ -14,11 +14,11 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     GameStates.prototype.switchState = function (state) {
         this.clear();
         if (state === 'pausing') {
-            this.state = new PausingLogic(this.game, this.render, this);
+            this.state = new PausingLogic(this.game, this.render, this, this.state);
         } else if (state === 'dying') {
-            this.state = new DyingLogic(this.game, this.render, this);
+            this.state = new DyingLogic(this.game, this.render, this, this.state);
         } else if (state === 'playing') {
-            this.state = new PlayingLogic(this.game, this.render, this);
+            this.state = new PlayingLogic(this.game, this.render, this, this.state);
         }
         this.init();
     };
@@ -32,8 +32,14 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     };
 
     GameStates.prototype.addChild = function (child) {
+        var stage = this.render.getStage();
         this.children.push(child);
-        this.render.getStage().addChild(child);
+        stage.addChild(child);
+        stage.sortChildren(function (a, b) {
+            var az = a.zindex || 0,
+                bz = b.zindex || 0;
+            return az - bz;
+        });
     };
 
     GameStates.prototype.removeChild = function (child) {
@@ -69,8 +75,8 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     return function (game, render) {
         // singleton
         return instance || (function () {
-            instance = new GameStates(game, render);
-            return instance;
-        }());
+                instance = new GameStates(game, render);
+                return instance;
+            }());
     };
 });

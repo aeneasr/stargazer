@@ -6,6 +6,10 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         KEYCODE_SPACE = 32,
         KEYCODE_ESCAPE = 27;
 
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
     Logic = function (game, render, state) {
         this.game = game;
         this.render = render;
@@ -15,12 +19,11 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
 
     Logic.prototype.tick = function (e) {
         instance.points += Math.floor(e.delta / 10);
-        // instance.fps.text = createjs.Ticker.getMeasuredFPS() | 0;
         instance.pointsText.text = instance.points;
 
         _.each(instance.backgrounds, function (v, k) {
             if (k === 0) {
-                v.x -= e.delta / 5 ;
+                v.x -= e.delta / 5;
                 if (v.x < -2159) {
                     v.x = 0;
                 }
@@ -36,7 +39,6 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
             var ticker = e.delta / 20;
             v.object.x -= v.velocity * ticker;
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
-                //console.log("death");
                 instance.state.switchState('dying');
             }
             if (v.object.x < 0 - v.object.image.width) {
@@ -44,22 +46,35 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
                 instance.generator.removeObject(v);
             }
         });
+
+        _.each(instance.itemGenerator.objects, function (v) {
+            if (Collision.checkPixelCollision(instance.player.object, v.object)) {
+                var type = v.type;
+                if (type === 'points') {
+                    instance.points += randInt(1000, 5000);
+                } else if (type === 'fuel') {
+                    instance.player.refill();
+                }
+                instance.state.removeChild(v.object);
+            }
+        });
     };
 
 
     Logic.prototype.createObjects = function (items) {
         this.points = 0;
-
         this.planetGenerator = new PlanetGenerator({state: this.state});
         this.background = new createjs.Bitmap('build/images/bg/0.png');
+        this.background.zindex = -1;
         this.backgrounds = [];
+
         for (var i = 6; i > 0; i--) {
             var b = new createjs.Shape(),
                 img = new Image(),
                 self = this;
             img.src = 'build/images/bg/' + i + '.png';
-            img.onload = function(b, img, self, i) {
-                return function() {
+            img.onload = function (b, img, self, i) {
+                return function () {
                     var w = self.render.width * 2,
                         h = self.render.height;
                     if (i === 6) {
@@ -69,6 +84,10 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
                     b.graphics.beginBitmapFill(img, 'repeat-x').drawRect(0, 0, w * 2, h).endFill();
                 };
             }(b, img, self, i);
+            b.zindex = i;
+            if (i === 6) {
+                b.zindex = 10000;
+            }
             b.x = i * 100;
             if (i === 6) {
                 b.y = instance.render.height - 100;
@@ -86,14 +105,11 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
 
         this.fuelBox = new FuelBarModel(this.player);
 
-        // this.fps = new createjs.Text(createjs.Ticker.getFPS(), '30px Arial', '#FFFFFF');
-
         createjs.Ticker.addEventListener('tick', this.tick);
         items.push(this.background);
         _.each(this.backgrounds, function (v) {
             items.push(v);
         });
-        // items.push(this.fps);
         items.push(this.pointsText);
         items.push(this.fuelBox.getObject());
         items.push(this.player.getObject());
