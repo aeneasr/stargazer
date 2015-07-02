@@ -26,7 +26,7 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'],
         createjs.Sound.alternateExtensions = ["mp3"];
         createjs.Sound.on("fileload", createjs.proxy(function loadHandler() {
             var ppc = new createjs.PlayPropsConfig().set({loop: -1});
-            //instance.bgmusic = createjs.Sound.play('bgmusic', ppc);
+            instance.bgmusic = createjs.Sound.play('bgmusic', ppc);
         }, (this)));
         createjs.Sound.registerSound('build/sound/stargazer.mp3', 'bgmusic');
     };
