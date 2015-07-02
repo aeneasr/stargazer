@@ -21,8 +21,8 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
                 'At least you tried.',
                 'Ouch.'
             ],
-            message = messages[Math.floor((Math.random() * messages.length -1))],
-            t = new createjs.Text(message + '\nPress space and try again.', '50px Arial'),
+            message = messages[Math.floor((Math.random() * (messages.length-1)))],
+            t = new createjs.Text((message || 'Oh boy...') + '\nPress space and try again.', '50px Arial'),
             b = t.getBounds();
         t.textAlign = 'center';
         t.x = this.render.width / 2;
