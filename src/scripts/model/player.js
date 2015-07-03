@@ -14,15 +14,19 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         alive: 2
     };
 
-    Player = function (render) {
+    Player = function (render, groundHeight) {
         var spriteSheet = new createjs.SpriteSheet({
                 images: [
-                    'build/images/player/player.png'
+                    'build/images/player/0-01.png',
+                    'build/images/player/0-02.png',
+                    'build/images/player/0-03.png',
+                    'build/images/player/0-04.png',
+                    'build/images/player/0-05.png',
+                    'build/images/player/0-06.png'
                 ],
                 frames: {
-                    width: 97,
-                    height: 185,
-                    count: 6
+                    width: 96,
+                    height: 184
                 },
                 animations: {
                     walk: [0, 5, 'walk', 0.089],
@@ -43,6 +47,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         this.fuel = maxFuel;
         this.object = player;
         this.render = render;
+        this.groundHeight = groundHeight;
 
         createjs.Ticker.on('tick', this.tick, this);
     };
@@ -57,12 +62,11 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         self.object.y += ticker * self.velocity;
         self.velocity += self.gravity;
 
-        if (self.object.y >= this.render.height - 75 - playerHeight) {
-            self.object.y = this.render.height - 75 - playerHeight;
+        if (self.object.y >= this.render.height - this.groundHeight - playerHeight) {
+            self.object.y = this.render.height - this.groundHeight - playerHeight;
             self.velocity = 0;
         }
 
-        console.log(self.velocity);
         if (self.velocity !== lastVelocity) {
             if (self.velocity < 0) {
                 self.object.gotoAndStop('jump');
@@ -70,7 +74,6 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
                 self.object.gotoAndStop('fall');
             } else {
                 self.object.gotoAndPlay('walk');
-                console.log('walk');
             }
             lastVelocity = self.velocity;
         }
@@ -108,12 +111,9 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         if (this.fuel >= fuelCost) {
             this.fuel -= fuelCost;
             this.rechargeDelay = rechargeDelay;
-            this.velocity = -3.5 + (2 / (1 * (5 * this.fuel || 1)));
+            this.velocity = -3.5 + (2 / (5 * this.fuel || 1));
         }
     };
 
-    return function (render) {
-        return new Player(render);
-    };
-})
-;
+    return Player;
+});

@@ -9,10 +9,21 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
         {
             name: 'fuel',
             generate: function () {
-                var b = new createjs.Bitmap('build/images/planets/0.png');
-                b.scaleX = 0.02;
-                b.scaleY = 0.02;
-                return b;
+                var spriteSheet = new createjs.SpriteSheet({
+                        images: [
+                            'build/images/upgrades/01_Upgrade.png',
+                            'build/images/upgrades/02_Upgrade.png',
+                            'build/images/upgrades/03_Upgrade.png'
+                        ],
+                        frames: {
+                            width: 120,
+                            height: 104
+                        },
+                        animations: {
+                            pulse: [0, 2, 'pulse', 0.089]
+                        }
+                    });
+                return new createjs.Sprite(spriteSheet, 'pulse');
             },
             velocity: 7,
             chance: 0.8
