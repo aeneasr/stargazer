@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         this.player = data.player;
         this.object = data.object;
         this.object.x = 1960;
-        this.object.y = 1000 * Math.random() + 40;
+        this.object.y = 800 * Math.random() + 40;
         this.object.zindex = 30;
 
         createjs.Ticker.addEventListener('tick', function (event) {

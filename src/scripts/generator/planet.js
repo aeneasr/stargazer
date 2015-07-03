@@ -73,8 +73,7 @@ define(['jquery', 'underscore', 'easel', 'model/planet'], function ($, _, create
 
     ObstacleGenerator.prototype.tick = function (e) {
         var item,
-            thing,
-            elapsed = 0;
+            thing;
 
         instance.threshhold -= e.delta / 200;
 
@@ -82,21 +81,10 @@ define(['jquery', 'underscore', 'easel', 'model/planet'], function ($, _, create
             instance.threshhold = Math.random() * 500;
 
             item = instance.getRandomItem(planets, instance.weights);
-
-            elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
-
-            if (elapsed < 0.5) {
-                elapsed = 1;
-            }
-
-            if (elapsed > 2) {
-                elapsed = 2;
-            }
-
             thing = item.generate();
             new PlanetModel({
                 object: thing,
-                velocity: item.velocity * elapsed * instance.rand(80, 100) / 100,
+                velocity: item.velocity * instance.rand(80, 100) / 100,
                 states: instance.state
             });
             instance.state.addChild(thing);

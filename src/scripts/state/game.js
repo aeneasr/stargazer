@@ -12,13 +12,14 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     };
 
     GameStates.prototype.switchState = function (state) {
+        var oldState = this.state;
         this.clear();
         if (state === 'pausing') {
-            this.state = new PausingLogic(this.game, this.render, this, this.state);
+            this.state = new PausingLogic(this.game, this.render, this, oldState);
         } else if (state === 'dying') {
-            this.state = new DyingLogic(this.game, this.render, this, this.state);
+            this.state = new DyingLogic(this.game, this.render, this, oldState);
         } else if (state === 'playing') {
-            this.state = new PlayingLogic(this.game, this.render, this, this.state);
+            this.state = new PlayingLogic(this.game, this.render, this, oldState);
         }
         this.init();
     };
@@ -70,6 +71,8 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     GameStates.prototype.clear = function () {
         this.state.clear();
         this.clearChildren(this.render);
+        createjs.Ticker.removeAllEventListeners();
+        this.render.attach();
     };
 
     return function (game, render) {

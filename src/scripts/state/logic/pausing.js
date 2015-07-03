@@ -23,7 +23,6 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     Logic.prototype.clear = function () {
-
     };
 
     // Logic.prototype.tick = function (e) {

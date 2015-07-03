@@ -11,7 +11,10 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
 
         this.width = width || 1920;
         this.height = height || 1080;
+        this.attach();
+    };
 
+    RenderService.prototype.attach = function() {
         createjs.Ticker.addEventListener('tick', this.update.bind(this));
         createjs.Ticker.setFPS(60);
     };

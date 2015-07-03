@@ -1,5 +1,5 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, createjs, ObstacleModel) {
+define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], function ($, _, createjs, ObstacleModel, WeightedList) {
     'use strict';
     var ObstacleGenerator,
         instance,
@@ -25,9 +25,9 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
                 });
                 return new createjs.Sprite(spriteSheet, 'pulse');
             },
-            velocity: 5,
+            velocity: 2,
             width: 80,
-            chance: 0.2
+            weight: 1
         },
         {
             name: 'brick',
@@ -47,9 +47,9 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
                 });
                 return new createjs.Sprite(spriteSheet, 'pulse');
             },
-            velocity: 7,
+            velocity: 2.2,
             width: 112,
-            chance: 0.8
+            weight: 1
         },
         {
             name: 'brick',
@@ -69,10 +69,11 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
                 });
                 return new createjs.Sprite(spriteSheet, 'pulse');
             },
-            velocity: 3,
+            velocity: 1,
             ground: true,
+            y: -196,
             width: 104,
-            chance: 0.2
+            weight: 2
         },
         {
             name: 'brick',
@@ -92,26 +93,21 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
                 });
                 return new createjs.Sprite(spriteSheet, 'pulse');
             },
-            velocity: 3,
+            velocity: 1,
             width: 72,
+            y: -140,
             ground: true,
-            chance: 0.2
+            weight: 3
         }
     ];
 
     ObstacleGenerator = function (data) {
-        var that = this;
-
         this.threshhold = 0;
         this.state = data.state;
-        this.weights = [];
         this.startTime = new Date();
         this.objects = [];
         this.render = data.render;
-
-        _.each(Obstacles, function (v) {
-            that.weights.push(v.chance);
-        });
+        this.weightedList = new WeightedList(Obstacles);
 
         createjs.Ticker.addEventListener('tick', this.tick);
     };
@@ -131,41 +127,23 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
         return Math.random() * (max - min) + min;
     };
 
-    ObstacleGenerator.prototype.getRandomItem = function (list, weight) {
-        var total_weight = weight.reduce(function (prev, cur) {
-                return prev + cur;
-            }), random_num = this.rand(0, total_weight),
-            weight_sum = 0,
-            i;
-
-        for (i = 0; i < list.length; i++) {
-            weight_sum += weight[i];
-            weight_sum = +weight_sum.toFixed(2);
-
-            if (random_num <= weight_sum) {
-                return list[i];
-            }
-        }
-
-        return list[0];
-    };
 
     ObstacleGenerator.prototype.tick = function (e) {
         var item,
             thing,
             elapsed = 0, data;
 
-        instance.threshhold -= e.delta / 5;
+        instance.threshhold -= e.delta;
 
         if (instance.threshhold < 0) {
-            instance.threshhold = Math.random() * 500;
-            item = instance.getRandomItem(Obstacles, instance.weights);
+            item = instance.weightedList.get();
             elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
-            if (elapsed < 0.5) {
-                elapsed = 1;
-            } else if (elapsed > 2) {
-                elapsed = 2;
+            if (elapsed < 0.9) {
+                elapsed = 0.9;
+            } else if (elapsed > 2.5) {
+                elapsed = 2.5;
             }
+            instance.threshhold = 500 + Math.random() * (2000 / elapsed);
 
             thing = item.generate();
             data = {
@@ -175,7 +153,7 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle'], function ($, _, crea
                 type: item.name
             };
             if (item.ground) {
-                data['y'] = instance.render.height - 200;
+                data['y'] = instance.render.height + item.y;
                 data['velocity'] = item.velocity;
             }
             var m = new ObstacleModel(data);

@@ -15,7 +15,7 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'],
     };
 
     Logic.prototype.createObjects = function (items) {
-        var t = new BlinkText(this.render, 'Ready for a challenge?\nPress Space!');
+        var t = new BlinkText(this.render, 'Welcome, stargazer!\nReady for a challenge?\nPress Space!');
         this.background = new Backgrounds(this.render);
         _.each(this.background.objects, function (v) {
             items.push(v);

@@ -26,6 +26,10 @@ define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds']
     }
 
     Logic = function (options) {
+        this.init(options);
+    };
+
+    Logic.prototype.init = function (options) {
         this.points = options.previous.points;
         this.highscore = parseInt(getCookie('highScore'));
         this.highscore = this.highscore || 0;
@@ -82,14 +86,13 @@ define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds']
     };
 
     return function (game, render, state, previous) {
-        return instance || (function () {
-                instance = new Logic({
-                    game: game,
-                    render: render,
-                    state: state,
-                    previous: previous
-                });
-                return instance;
-            }());
+        var data = {game: game, render: render, state: state, previous: previous};
+        if (instance) {
+            instance.init(data);
+            return instance;
+        } else {
+            instance = new Logic(data);
+            return instance;
+        }
     };
 });

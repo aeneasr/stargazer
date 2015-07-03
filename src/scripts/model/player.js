@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         alive: 2
     };
 
-    Player = function (render, groundHeight) {
+    Player = function (state, render, groundHeight) {
         var spriteSheet = new createjs.SpriteSheet({
                 images: [
                     'build/images/player/0-01.png',
@@ -48,11 +48,12 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         this.object = player;
         this.render = render;
         this.groundHeight = groundHeight;
+        this.state = state;
 
         createjs.Ticker.on('tick', this.tick, this);
     };
 
-    Player.prototype.destroy = function () {
+    Player.prototype.clear = function () {
         createjs.Ticker.removeEventListener('tick', this.tick);
     };
 
@@ -79,7 +80,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         }
 
         if (self.rechargeDelay > 0) {
-            self.rechargeDelay -= ticker / 50;
+            self.rechargeDelay -= ticker / 30;
         } else {
             self.fuel += ticker / 50;
         }

@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         instance.pointsText.text = instance.points;
 
         _.each(instance.generator.objects, function (v) {
-            var ticker = e.delta / 20;
+            var ticker = e.delta / 20 * 5;
             v.object.x -= v.velocity * ticker;
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
                 instance.state.switchState('dying');
@@ -37,6 +37,10 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         _.each(instance.itemGenerator.objects, function (v) {
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
                 var type = v.type;
+                if (v.used){
+                    return;
+                }
+                v.used = true;
                 if (type === 'points') {
                     instance.points += randInt(1000, 2000);
                 } else if (type === 'fuel') {
@@ -50,13 +54,13 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
 
     Logic.prototype.createObjects = function (items) {
         this.points = 0;
-        this.planetGenerator = new PlanetGenerator({state: this.state});
+        //this.planetGenerator = new PlanetGenerator({state: this.state});
         this.backgrounds = new Backgrounds(this.render, true, groundHeight);
 
-        this.player = new PlayerModel(this.render, groundHeight);
+        this.player = new PlayerModel(this.state, this.render, groundHeight);
         this.generator = new ObstacleGenerator({state: this.state, render: this.render});
         this.itemGenerator = new ItemGenerator({state: this.state});
-        this.pointsText = new createjs.Text('0', '30px Arial', '#ffffff');
+        this.pointsText = new createjs.Text('0', '30px "Lucida Console"', '#ffffff');
         this.pointsText.x = 1800;
         this.pointsText.y = 20;
 
@@ -82,10 +86,10 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
     };
 
     Logic.prototype.clear = function () {
-        createjs.Ticker.removeEventListener('tick', this.tick);
+        //createjs.Ticker.removeEventListener('tick', this.tick);
+        this.player.clear();
         this.generator.clear();
         this.itemGenerator.clear();
-        this.planetGenerator.clear();
     };
 
     return function (game, render, state) {

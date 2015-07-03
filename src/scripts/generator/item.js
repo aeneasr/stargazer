@@ -1,5 +1,5 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs, ItemModel) {
+define(['jquery', 'underscore', 'easel', 'model/item', 'service/list'], function ($, _, createjs, ItemModel, WeightedList) {
     'use strict';
     var ItemGenerator,
         instance,
@@ -10,49 +10,44 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
             name: 'fuel',
             generate: function () {
                 var spriteSheet = new createjs.SpriteSheet({
-                        images: [
-                            'build/images/upgrades/01_Upgrade.png',
-                            'build/images/upgrades/02_Upgrade.png',
-                            'build/images/upgrades/03_Upgrade.png'
-                        ],
-                        frames: {
-                            width: 120,
-                            height: 104
-                        },
-                        animations: {
-                            pulse: [0, 2, 'pulse', 0.089]
-                        }
-                    });
+                    images: [
+                        'build/images/upgrades/01_Upgrade.png',
+                        'build/images/upgrades/02_Upgrade.png',
+                        'build/images/upgrades/03_Upgrade.png'
+                    ],
+                    frames: {
+                        width: 120,
+                        height: 104
+                    },
+                    animations: {
+                        pulse: [0, 2, 'pulse', 0.089]
+                    }
+                });
                 return new createjs.Sprite(spriteSheet, 'pulse');
             },
             velocity: 7,
-            chance: 0.8
+            weight: 4
         },
         {
             name: 'points',
             generate: function () {
-                var b = new createjs.Bitmap('build/images/planets/1.png');
-                b.scaleX = 0.02;
-                b.scaleY = 0.02;
+                var b = new createjs.Bitmap('build/images/rocket/1.png');
+                b.scaleX = 0.2;
+                b.scaleY = 0.2;
+                b.rotate = -90;
                 return b;
             },
             velocity: 4,
-            chance: 0.3
+            weight: 1
         }
     ];
 
     ItemGenerator = function (data) {
-        var that = this;
-
         this.threshhold = 0;
         this.state = data.state;
-        this.weights = [];
         this.startTime = new Date();
         this.objects = [];
-
-        _.each(Items, function (v) {
-            that.weights.push(v.chance);
-        });
+        this.weightedList = new WeightedList(Items);
 
         createjs.Ticker.addEventListener('tick', this.tick);
     };
@@ -65,35 +60,20 @@ define(['jquery', 'underscore', 'easel', 'model/item'], function ($, _, createjs
         return Math.random() * (max - min) + min;
     };
 
-    ItemGenerator.prototype.getRandomItem = function (list, weight) {
-        var total_weight = weight.reduce(function (prev, cur) {
-                return prev + cur;
-            }), random_num = this.rand(0, total_weight),
-            weight_sum = 0,
-            i;
-
-        for (i = 0; i < list.length; i++) {
-            weight_sum += weight[i];
-            weight_sum = +weight_sum.toFixed(2);
-
-            if (random_num <= weight_sum) {
-                return list[i];
-            }
-        }
-
-        return list[0];
-    };
-
     ItemGenerator.prototype.tick = function (e) {
-        var item,
-            thing,
-            m;
+        var item, thing, m, elapsed;
 
         instance.threshhold -= e.delta;
 
         if (instance.threshhold < 0) {
-            instance.threshhold = Math.random() * 20000;
-            item = instance.getRandomItem(Items, instance.weights);
+            elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
+            if (elapsed < 0.5) {
+                elapsed = 0.5;
+            } else if (elapsed > 2) {
+                elapsed = 2;
+            }
+            instance.threshhold = 3000 * elapsed + Math.random() * 2000;
+            item = instance.weightedList.get();
             thing = item.generate();
             m = new ItemModel({
                 object: thing,

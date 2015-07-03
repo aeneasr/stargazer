@@ -5,10 +5,11 @@ define(['easel'], function (createjs) {
 
     BlinkText = function (render, text, color) {
         var up,
-            t = new createjs.Text(text, '50px Arial', color || '#eeeeee'),
+            t = new createjs.Text(text, '50px "Lucida Console"', color || '#eeeeee'),
             bo = t.getBounds();
         t.textAlign = 'center';
         t.alpha = 0.2;
+        t.lineHeight = 60;
         t.x = render.width / 2;
         t.y = render.height / 2 - bo.height / 2;
 
@@ -24,8 +25,8 @@ define(['easel'], function (createjs) {
                 t.alpha = 0.8;
                 up = false;
             }
-            if (!up && t.alpha < 0.2) {
-                t.alpha = 0.2;
+            if (!up && t.alpha < 0.1) {
+                t.alpha = 0.1;
                 up = true;
             }
         });
