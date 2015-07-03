@@ -11,6 +11,7 @@ define([], function () {
         this.object = data.object;
         this.object.x = 1960;
         this.object.y = (1000 - 150) * Math.random() + 40;
+        this.object.zindex = 20;
     };
 
     return function (data) {

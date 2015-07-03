@@ -9,7 +9,7 @@ require.config({
         "bootstrap": "../bower_components/sass-bootstrap/dist/js/bootstrap",
         "easel": "../bower_components/EaselJS/lib/easeljs-0.8.1.min",
         //"preload": "../bower_components/PreloadJS/lib/preloadjs-0.4.1.min",
-        //"sound": "../bower_components/SoundJS/lib/soundjs-0..2.min",
+        "sound": "../bower_components/SoundJS/lib/soundjs-0.6.1.min",
         "tween": "../bower_components/TweenJS/lib/tweenjs-0.6.1.min",
         "render_service" : "service/render",
         "game_service" : "service/game",
