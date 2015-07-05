@@ -31,11 +31,21 @@ define(['jquery', 'underscore', 'easel', 'model/item', 'service/list'], function
         {
             name: 'points',
             generate: function () {
-                var b = new createjs.Bitmap('build/images/rocket/1.png');
-                b.scaleX = 0.2;
-                b.scaleY = 0.2;
-                b.rotate = -90;
-                return b;
+                var spriteSheet = new createjs.SpriteSheet({
+                    images: [
+                        'build/images/upgrades/04_Upgrade.png',
+                        'build/images/upgrades/05_Upgrade.png',
+                        'build/images/upgrades/06_Upgrade.png'
+                    ],
+                    frames: {
+                        width: 120,
+                        height: 104
+                    },
+                    animations: {
+                        pulse: [0, 2, 'pulse', 0.089]
+                    }
+                });
+                return new createjs.Sprite(spriteSheet, 'pulse');
             },
             velocity: 4,
             weight: 1
