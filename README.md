@@ -1,6 +1,8 @@
 stargazer
 =========
 
+![Stargazer](/.stargazer.png?raw=true "Stargazer")
+
 \>\> [**Play now!**](http://arekkas.github.io/stargazer/app) \<\<
 
 Works best on **Chrome**.
