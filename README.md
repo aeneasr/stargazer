@@ -1,7 +1,7 @@
 stargazer
 =========
 
-![Stargazer](/.stargazer.png?raw=true "Stargazer")
+![Stargazer](https://raw.githubusercontent.com/arekkas/stargazer/master/stargazer.png "Stargazer")
 
 \>\> [**Play now!**](http://arekkas.github.io/stargazer/app) \<\<
 
