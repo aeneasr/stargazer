@@ -13161,7 +13161,7 @@ define('model/BlinkText',['easel'], function (createjs) {
 
     BlinkText = function (render, text, color) {
         var up,
-            t = new createjs.Text(text, '50px "Lucida Console"', color || '#eeeeee'),
+            t = new createjs.Text(text, '50px "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace', color || '#eeeeee'),
             bo = t.getBounds();
         t.textAlign = 'center';
         t.alpha = 0.2;
@@ -13734,7 +13734,6 @@ define('generator/obstacle',['jquery', 'underscore', 'easel', 'model/obstacle', 
         if (instance.threshhold < 0) {
             item = instance.weightedList.get();
             elapsed = (new Date() - instance.startTime) / 1000 / 30 + 0.5;
-            console.log(elapsed);
             if (elapsed < 0.7) {
                 elapsed = 0.7;
             } else if (elapsed > 2.8) {
@@ -13744,7 +13743,6 @@ define('generator/obstacle',['jquery', 'underscore', 'easel', 'model/obstacle', 
             if (elapsed > 2.4) {
                 elapsed = 2.4;
             }
-            console.log(elapsed);
 
             thing = item.generate();
             data = {
@@ -14394,6 +14392,17 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
         groundHeight = 100,
         music = new Music();
 
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
     function randInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
@@ -14441,6 +14450,7 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
 
 
     Logic.prototype.createObjects = function (items) {
+        this.highscore = getCookie('highScore') || 0;
         this.points = 0;
         //this.planetGenerator = new PlanetGenerator({state: this.state});
         this.backgrounds = new Backgrounds(this.render, true, groundHeight);
@@ -14448,9 +14458,12 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
         this.player = new PlayerModel(this.state, this.render, groundHeight);
         this.generator = new ObstacleGenerator({state: this.state, render: this.render});
         this.itemGenerator = new ItemGenerator({state: this.state});
-        this.pointsText = new createjs.Text('0', '30px "Lucida Console"', '#ffffff');
+        this.pointsText = new createjs.Text('0', '30px "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace', '#ffffff');
+        this.highscoreText = new createjs.Text(this.highscore, '30px "Lucida Console"', '#ffffff');
         this.pointsText.x = 1800;
         this.pointsText.y = 20;
+        this.highscoreText.x = 1800;
+        this.highscoreText.y = 65;
 
         this.fuelBox = new FuelBarModel(this.player);
 
@@ -14459,6 +14472,7 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
             items.push(v);
         });
         items.push(this.pointsText);
+        items.push(this.highscoreText);
         items.push(this.fuelBox.getObject());
         items.push(this.player.getObject());
         items.push(this.background);

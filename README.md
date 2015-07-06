@@ -23,6 +23,11 @@ If you're interested in the Cubase Project, please let me know.
 
 ## Changes
 
+**0.0.4**
+* High score is now visible on the top right corner
+* Removed some debugging output
+* Fonts should look awesome on linux now to
+
 **0.0.3**
 * Fixed a bug where gravity was not frame-independent
 * Music is now mutable (press m)

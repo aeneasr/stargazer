@@ -138,7 +138,6 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
         if (instance.threshhold < 0) {
             item = instance.weightedList.get();
             elapsed = (new Date() - instance.startTime) / 1000 / 30 + 0.5;
-            console.log(elapsed);
             if (elapsed < 0.7) {
                 elapsed = 0.7;
             } else if (elapsed > 2.8) {
@@ -148,7 +147,6 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
             if (elapsed > 2.4) {
                 elapsed = 2.4;
             }
-            console.log(elapsed);
 
             thing = item.generate();
             data = {

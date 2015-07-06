@@ -5,7 +5,7 @@ define(['easel'], function (createjs) {
 
     BlinkText = function (render, text, color) {
         var up,
-            t = new createjs.Text(text, '50px "Lucida Console"', color || '#eeeeee'),
+            t = new createjs.Text(text, '50px "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace', color || '#eeeeee'),
             bo = t.getBounds();
         t.textAlign = 'center';
         t.alpha = 0.2;

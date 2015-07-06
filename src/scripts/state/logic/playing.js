@@ -8,6 +8,17 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         groundHeight = 100,
         music = new Music();
 
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
     function randInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
@@ -55,6 +66,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
 
 
     Logic.prototype.createObjects = function (items) {
+        this.highscore = getCookie('highScore') || 0;
         this.points = 0;
         //this.planetGenerator = new PlanetGenerator({state: this.state});
         this.backgrounds = new Backgrounds(this.render, true, groundHeight);
@@ -62,9 +74,12 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         this.player = new PlayerModel(this.state, this.render, groundHeight);
         this.generator = new ObstacleGenerator({state: this.state, render: this.render});
         this.itemGenerator = new ItemGenerator({state: this.state});
-        this.pointsText = new createjs.Text('0', '30px "Lucida Console"', '#ffffff');
+        this.pointsText = new createjs.Text('0', '30px "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace', '#ffffff');
+        this.highscoreText = new createjs.Text(this.highscore, '30px "Lucida Console"', '#ffffff');
         this.pointsText.x = 1800;
         this.pointsText.y = 20;
+        this.highscoreText.x = 1800;
+        this.highscoreText.y = 65;
 
         this.fuelBox = new FuelBarModel(this.player);
 
@@ -73,6 +88,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
             items.push(v);
         });
         items.push(this.pointsText);
+        items.push(this.highscoreText);
         items.push(this.fuelBox.getObject());
         items.push(this.player.getObject());
         items.push(this.background);
