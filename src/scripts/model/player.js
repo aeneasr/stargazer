@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     var Player,
         States,
         maxFuel = 10,
-        fuelCost = 2,
+        fuelCost = 2.5,
         rechargeDelay = 10,
         playerHeight = 185,
         lastVelocity = 0;
@@ -68,6 +68,13 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
             self.velocity = 0;
         }
 
+        if (self.object.y <= 0) {
+            self.object.y = 1;
+            self.fuel = 0;
+            self.velocity = 0;
+            self.rechargeDelay = rechargeDelay;
+        }
+
         if (self.velocity !== lastVelocity) {
             if (self.velocity < 0) {
                 self.object.gotoAndStop('jump');
@@ -80,9 +87,9 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         }
 
         if (self.rechargeDelay > 0) {
-            self.rechargeDelay -= ticker / 30;
+            self.rechargeDelay -= ticker / 15;
         } else {
-            self.fuel += ticker / 50;
+            self.fuel += ticker / 30;
         }
 
         if (self.fuel > maxFuel) {
@@ -109,7 +116,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     Player.prototype.push = function () {
-        if (this.fuel >= fuelCost) {
+        if (this.fuel > fuelCost) {
             this.fuel -= fuelCost;
             this.rechargeDelay = rechargeDelay;
             this.velocity = -3.5 + (2 / (5 * this.fuel || 1));

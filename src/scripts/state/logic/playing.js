@@ -45,6 +45,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
                     instance.points += randInt(1000, 2000);
                 } else if (type === 'fuel') {
                     instance.player.refill();
+                    instance.points += randInt(50, 100);
                 }
                 instance.state.removeChild(v.object);
             }
@@ -76,13 +77,15 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         items.push(this.background);
     };
 
-    Logic.prototype.keyUp = function (e) {
-        if (e.keyCode === KEYCODE_ESCAPE) {
-            instance.state.switchState('pausing');
-        } else if (e.keyCode === KEYCODE_SPACE) {
+    Logic.prototype.keyDown = function (e) {
+        if (e.keyCode === KEYCODE_SPACE) {
             instance.player.push(10);
             return false;
         }
+    };
+
+    Logic.prototype.mouseDown = function () {
+        instance.player.push(10);
     };
 
     Logic.prototype.clear = function () {

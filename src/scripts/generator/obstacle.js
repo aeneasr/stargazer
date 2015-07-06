@@ -137,11 +137,11 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
 
         if (instance.threshhold < 0) {
             item = instance.weightedList.get();
-            elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
-            if (elapsed < 0.9) {
-                elapsed = 0.9;
-            } else if (elapsed > 2.5) {
-                elapsed = 2.5;
+            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 7;
+            if (elapsed < 0.8) {
+                elapsed = 0.8;
+            } else if (elapsed > 2.1) {
+                elapsed = 2.1;
             }
             instance.threshhold = 500 + Math.random() * (2000 / elapsed);
 

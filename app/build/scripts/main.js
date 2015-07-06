@@ -13155,43 +13155,6 @@ define('render_service',['jquery', 'underscore', 'easel'], function ($, _, creat
     };
 });
 /*global define */
-define('state/logic/pausing',['jquery', 'underscore', 'easel'], function ($, _, createjs) {
-    'use strict';
-    var Logic,
-        instance,
-        KEYCODE_SPACE = 32;
-
-    Logic = function (game, render, state) {
-        this.game = game;
-        this.render = render;
-        this.state = state;
-    };
-
-    Logic.prototype.createObjects = function (items) {
-        items.push(new createjs.Text("Such pause", "50px Arial"));
-    };
-
-    Logic.prototype.keyUp = function (e) {
-        console.log(instance.state);
-        if (e.keyCode === KEYCODE_SPACE) {
-            instance.state.switchState('playing');
-        }
-    };
-
-    Logic.prototype.clear = function () {
-    };
-
-    // Logic.prototype.tick = function (e) {
-    // };
-
-    return function (game, render, state) {
-        return instance || (function () {
-            instance = new Logic(game, render, state);
-            return instance;
-        }());
-    };
-});
-/*global define */
 define('model/BlinkText',['easel'], function (createjs) {
     'use strict';
     var BlinkText;
@@ -13339,7 +13302,7 @@ define('state/logic/dying',['jquery', 'underscore', 'easel', 'model/BlinkText', 
                 'Oh...'
             ];
             message = messages[randInt(0, messages.length - 1)];
-            t = new BlinkText(this.render, message + '\n' + this.points + ' points.\nNot quite ' + this.highscore + '...\nPress space and try harder.');
+            t = new BlinkText(this.render, message + '\n' + this.points + ' points.\nNot quite ' + this.highscore + '...\nPress space or tap to try harder.');
         } else {
             messages = [
                 'Wow!',
@@ -13350,7 +13313,7 @@ define('state/logic/dying',['jquery', 'underscore', 'easel', 'model/BlinkText', 
                 'Immortal!'
             ];
             message = messages[randInt(0, messages.length - 1)];
-            t = new BlinkText(this.render, message + '\n You broke your high score with ' + this.points + ' points!\nPress space and get even better!');
+            t = new BlinkText(this.render, message + '\n You broke your high score with ' + this.points + ' points!\nPress space or tap to get even better!');
         }
 
         this.background = new Backgrounds(this.render);
@@ -13360,10 +13323,14 @@ define('state/logic/dying',['jquery', 'underscore', 'easel', 'model/BlinkText', 
         items.push(t.object);
     };
 
-    Logic.prototype.keyUp = function (e) {
+    Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.state.switchState('playing');
         }
+    };
+
+    Logic.prototype.mouseDown = function (e) {
+        instance.state.switchState('playing');
     };
 
     Logic.prototype.clear = function () {
@@ -13387,7 +13354,7 @@ define('model/player',['jquery', 'underscore', 'easel'], function ($, _, createj
     var Player,
         States,
         maxFuel = 10,
-        fuelCost = 2,
+        fuelCost = 2.5,
         rechargeDelay = 10,
         playerHeight = 185,
         lastVelocity = 0;
@@ -13451,6 +13418,13 @@ define('model/player',['jquery', 'underscore', 'easel'], function ($, _, createj
             self.velocity = 0;
         }
 
+        if (self.object.y <= 0) {
+            self.object.y = 1;
+            self.fuel = 0;
+            self.velocity = 0;
+            self.rechargeDelay = rechargeDelay;
+        }
+
         if (self.velocity !== lastVelocity) {
             if (self.velocity < 0) {
                 self.object.gotoAndStop('jump');
@@ -13463,9 +13437,9 @@ define('model/player',['jquery', 'underscore', 'easel'], function ($, _, createj
         }
 
         if (self.rechargeDelay > 0) {
-            self.rechargeDelay -= ticker / 30;
+            self.rechargeDelay -= ticker / 15;
         } else {
-            self.fuel += ticker / 50;
+            self.fuel += ticker / 30;
         }
 
         if (self.fuel > maxFuel) {
@@ -13492,7 +13466,7 @@ define('model/player',['jquery', 'underscore', 'easel'], function ($, _, createj
     };
 
     Player.prototype.push = function () {
-        if (this.fuel >= fuelCost) {
+        if (this.fuel > fuelCost) {
             this.fuel -= fuelCost;
             this.rechargeDelay = rechargeDelay;
             this.velocity = -3.5 + (2 / (5 * this.fuel || 1));
@@ -13692,11 +13666,11 @@ define('generator/obstacle',['jquery', 'underscore', 'easel', 'model/obstacle', 
 
         if (instance.threshhold < 0) {
             item = instance.weightedList.get();
-            elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
-            if (elapsed < 0.9) {
-                elapsed = 0.9;
-            } else if (elapsed > 2.5) {
-                elapsed = 2.5;
+            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 7;
+            if (elapsed < 0.8) {
+                elapsed = 0.8;
+            } else if (elapsed > 2.1) {
+                elapsed = 2.1;
             }
             instance.threshhold = 500 + Math.random() * (2000 / elapsed);
 
@@ -13831,13 +13805,13 @@ define('generator/item',['jquery', 'underscore', 'easel', 'model/item', 'service
         instance.threshhold -= e.delta;
 
         if (instance.threshhold < 0) {
-            elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
-            if (elapsed < 0.5) {
-                elapsed = 0.5;
+            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 7;
+            if (elapsed < 0.8) {
+                elapsed = 0.8;
             } else if (elapsed > 2) {
-                elapsed = 2;
+                elapsed = 1.5;
             }
-            instance.threshhold = 3000 * elapsed + Math.random() * 2000;
+            instance.threshhold = 3000 / elapsed + Math.random() * 2000;
             item = instance.weightedList.get();
             thing = item.generate();
             m = new ItemModel({
@@ -14385,6 +14359,7 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
                     instance.points += randInt(1000, 2000);
                 } else if (type === 'fuel') {
                     instance.player.refill();
+                    instance.points += randInt(50, 100);
                 }
                 instance.state.removeChild(v.object);
             }
@@ -14416,13 +14391,15 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
         items.push(this.background);
     };
 
-    Logic.prototype.keyUp = function (e) {
-        if (e.keyCode === KEYCODE_ESCAPE) {
-            instance.state.switchState('pausing');
-        } else if (e.keyCode === KEYCODE_SPACE) {
+    Logic.prototype.keyDown = function (e) {
+        if (e.keyCode === KEYCODE_SPACE) {
             instance.player.push(10);
             return false;
         }
+    };
+
+    Logic.prototype.mouseDown = function () {
+        instance.player.push(10);
     };
 
     Logic.prototype.clear = function () {
@@ -14476,7 +14453,7 @@ define('state/logic/starting',['underscore', 'easel', 'model/BlinkText', 'model/
     };
 
     Logic.prototype.createObjects = function (items) {
-        var t = new BlinkText(this.render, 'Welcome, stargazer!\nReady for a challenge?\nPress Space!');
+        var t = new BlinkText(this.render, 'Welcome, stargazer!\nReady for a challenge?\nPress space or tap!');
         this.background = new Backgrounds(this.render);
         _.each(this.background.objects, function (v) {
             items.push(v);
@@ -14492,10 +14469,14 @@ define('state/logic/starting',['underscore', 'easel', 'model/BlinkText', 'model/
         createjs.Sound.registerSound('build/sound/stargazer.mp3', 'bgmusic');
     };
 
-    Logic.prototype.keyUp = function (e) {
+    Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.state.switchState('playing');
         }
+    };
+
+    Logic.prototype.mouseDown = function () {
+        instance.state.switchState('playing');
     };
 
     Logic.prototype.clear = function () {
@@ -14513,7 +14494,7 @@ define('state/logic/starting',['underscore', 'easel', 'model/BlinkText', 'model/
     };
 });
 /*global define */
-define('game_states',['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dying', 'state/logic/playing', 'state/logic/starting'], function ($, _, createjs, PausingLogic, DyingLogic, PlayingLogic, StartingLogic) {
+define('game_states',['jquery', 'underscore', 'easel', 'state/logic/dying', 'state/logic/playing', 'state/logic/starting'], function ($, _, createjs, DyingLogic, PlayingLogic, StartingLogic) {
     'use strict';
     var GameStates,
         instance;
@@ -14528,9 +14509,7 @@ define('game_states',['jquery', 'underscore', 'easel', 'state/logic/pausing', 's
     GameStates.prototype.switchState = function (state) {
         var oldState = this.state;
         this.clear();
-        if (state === 'pausing') {
-            this.state = new PausingLogic(this.game, this.render, this, oldState);
-        } else if (state === 'dying') {
+        if (state === 'dying') {
             this.state = new DyingLogic(this.game, this.render, this, oldState);
         } else if (state === 'playing') {
             this.state = new PlayingLogic(this.game, this.render, this, oldState);
@@ -14578,8 +14557,12 @@ define('game_states',['jquery', 'underscore', 'easel', 'state/logic/pausing', 's
         this.addChildren();
     };
 
-    GameStates.prototype.keyUp = function (e) {
-        instance.state.keyUp(e);
+    GameStates.prototype.keyDown = function (e) {
+        instance.state.keyDown(e);
+    };
+
+    GameStates.prototype.mouseDown = function (e) {
+        instance.state.mouseDown(e);
     };
 
     GameStates.prototype.clear = function () {
@@ -14601,30 +14584,45 @@ define('game_states',['jquery', 'underscore', 'easel', 'state/logic/pausing', 's
 define('game_service',['jquery', 'underscore', 'easel', 'game_states'], function ($, _, createjs, GameStates) {
     'use strict';
     var GameService,
-        instance;
+        instance,
+        keyWasDown = false;
 
     GameService = function (render) {
-        var that = this;
+        var that = this,
+            $body = $('body');
 
         this.render = render;
         this.state = new GameStates(this, this.render);
         this.state.init(this.render);
 
-        $('body').keyup(function (e) {
-            that.keyUp(e);
+        $body.keydown(function (e) {
+            if (!keyWasDown) {
+                that.keyDown(e);
+                keyWasDown = true;
+            }
+        });
+        $body.keyup(function () {
+            keyWasDown = false;
+        });
+        $body.mousedown(function (e) {
+            that.mouseDown(e);
         });
     };
 
-    GameService.prototype.keyUp = function (e) {
-        instance.state.keyUp(e, instance);
+    GameService.prototype.keyDown = function (e) {
+        instance.state.keyDown(e, instance);
+    };
+
+    GameService.prototype.mouseDown = function (e) {
+        instance.state.mouseDown(e, instance);
     };
 
     return function (render) {
         // singleton
         return instance || (function (render) {
-            instance = new GameService(render);
-            return instance;
-        }(render));
+                instance = new GameService(render);
+                return instance;
+            }(render));
     };
 });
 

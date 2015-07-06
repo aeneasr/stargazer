@@ -76,13 +76,13 @@ define(['jquery', 'underscore', 'easel', 'model/item', 'service/list'], function
         instance.threshhold -= e.delta;
 
         if (instance.threshhold < 0) {
-            elapsed = Math.floor((new Date() - instance.startTime) / 1000 / 60 * 7);
-            if (elapsed < 0.5) {
-                elapsed = 0.5;
+            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 7;
+            if (elapsed < 0.8) {
+                elapsed = 0.8;
             } else if (elapsed > 2) {
-                elapsed = 2;
+                elapsed = 1.5;
             }
-            instance.threshhold = 3000 * elapsed + Math.random() * 2000;
+            instance.threshhold = 3000 / elapsed + Math.random() * 2000;
             item = instance.weightedList.get();
             thing = item.generate();
             m = new ItemModel({

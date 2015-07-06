@@ -55,7 +55,7 @@ define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds']
                 'Oh...'
             ];
             message = messages[randInt(0, messages.length - 1)];
-            t = new BlinkText(this.render, message + '\n' + this.points + ' points.\nNot quite ' + this.highscore + '...\nPress space and try harder.');
+            t = new BlinkText(this.render, message + '\n' + this.points + ' points.\nNot quite ' + this.highscore + '...\nPress space or tap to try harder.');
         } else {
             messages = [
                 'Wow!',
@@ -66,7 +66,7 @@ define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds']
                 'Immortal!'
             ];
             message = messages[randInt(0, messages.length - 1)];
-            t = new BlinkText(this.render, message + '\n You broke your high score with ' + this.points + ' points!\nPress space and get even better!');
+            t = new BlinkText(this.render, message + '\n You broke your high score with ' + this.points + ' points!\nPress space or tap to get even better!');
         }
 
         this.background = new Backgrounds(this.render);
@@ -76,10 +76,14 @@ define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds']
         items.push(t.object);
     };
 
-    Logic.prototype.keyUp = function (e) {
+    Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.state.switchState('playing');
         }
+    };
+
+    Logic.prototype.mouseDown = function (e) {
+        instance.state.switchState('playing');
     };
 
     Logic.prototype.clear = function () {

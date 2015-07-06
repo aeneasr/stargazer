@@ -1,5 +1,5 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dying', 'state/logic/playing', 'state/logic/starting'], function ($, _, createjs, PausingLogic, DyingLogic, PlayingLogic, StartingLogic) {
+define(['jquery', 'underscore', 'easel', 'state/logic/dying', 'state/logic/playing', 'state/logic/starting'], function ($, _, createjs, DyingLogic, PlayingLogic, StartingLogic) {
     'use strict';
     var GameStates,
         instance;
@@ -14,9 +14,7 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
     GameStates.prototype.switchState = function (state) {
         var oldState = this.state;
         this.clear();
-        if (state === 'pausing') {
-            this.state = new PausingLogic(this.game, this.render, this, oldState);
-        } else if (state === 'dying') {
+        if (state === 'dying') {
             this.state = new DyingLogic(this.game, this.render, this, oldState);
         } else if (state === 'playing') {
             this.state = new PlayingLogic(this.game, this.render, this, oldState);
@@ -64,8 +62,12 @@ define(['jquery', 'underscore', 'easel', 'state/logic/pausing', 'state/logic/dyi
         this.addChildren();
     };
 
-    GameStates.prototype.keyUp = function (e) {
-        instance.state.keyUp(e);
+    GameStates.prototype.keyDown = function (e) {
+        instance.state.keyDown(e);
+    };
+
+    GameStates.prototype.mouseDown = function (e) {
+        instance.state.mouseDown(e);
     };
 
     GameStates.prototype.clear = function () {

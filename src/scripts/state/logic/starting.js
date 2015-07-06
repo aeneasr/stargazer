@@ -15,7 +15,7 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'],
     };
 
     Logic.prototype.createObjects = function (items) {
-        var t = new BlinkText(this.render, 'Welcome, stargazer!\nReady for a challenge?\nPress Space!');
+        var t = new BlinkText(this.render, 'Welcome, stargazer!\nReady for a challenge?\nPress space or tap!');
         this.background = new Backgrounds(this.render);
         _.each(this.background.objects, function (v) {
             items.push(v);
@@ -31,10 +31,14 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'],
         createjs.Sound.registerSound('build/sound/stargazer.mp3', 'bgmusic');
     };
 
-    Logic.prototype.keyUp = function (e) {
+    Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.state.switchState('playing');
         }
+    };
+
+    Logic.prototype.mouseDown = function () {
+        instance.state.switchState('playing');
     };
 
     Logic.prototype.clear = function () {
