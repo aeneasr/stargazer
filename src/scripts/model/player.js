@@ -61,7 +61,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
         var ticker = event.delta / 6,
             self = this;
         self.object.y += ticker * self.velocity;
-        self.velocity += self.gravity;
+        self.velocity += ticker * self.gravity / 2.93;
 
         if (self.object.y >= this.render.height - this.groundHeight - playerHeight) {
             self.object.y = this.render.height - this.groundHeight - playerHeight;

@@ -1,9 +1,10 @@
 /*global define */
-define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'], function (_, createjs, BlinkText, Backgrounds) {
+define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'service/music', 'sound'], function (_, createjs, BlinkText, Backgrounds, Music) {
     'use strict';
     var Logic,
         instance,
-        KEYCODE_SPACE = 32;
+        KEYCODE_SPACE = 32,
+        music = new Music();
 
     Logic = function (options) {
         this.game = options.game;
@@ -26,7 +27,7 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'],
         createjs.Sound.alternateExtensions = ["mp3"];
         createjs.Sound.on("fileload", createjs.proxy(function loadHandler() {
             var ppc = new createjs.PlayPropsConfig().set({loop: -1});
-            instance.bgmusic = createjs.Sound.play('bgmusic', ppc);
+            music.addChannel(createjs.Sound.play('bgmusic', ppc));
         }, (this)));
         createjs.Sound.registerSound('build/sound/stargazer.mp3', 'bgmusic');
     };
@@ -34,6 +35,9 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'sound'],
     Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.state.switchState('playing');
+        } else if (e.keyCode === KEYCODE_M) {
+            music.toggleAll();
+            return false;
         }
     };
 

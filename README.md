@@ -10,6 +10,7 @@ Works best on **Chrome**. And on your touch pad / mobile as well!
 ## HOW TO PLAY
 
 * Press **space**, hit the mouse or tap to jump. You need fuel to jump. To recharge, stop jumping and wait for a amount of time.
+* Press **M** to mute/unmute the music.
 * **Obstacles** spawn randomly. The longer you survive, the faster and more often they spawn.
 * **Upgrades** are *green* and *blue stars*, which spawn randomly as well. The longer you survive, the more frequently they spawn.
   * *Green star*: Fuels up jet pack and gives between 50 and 100 extra points.
@@ -21,6 +22,16 @@ Works best on **Chrome**. And on your touch pad / mobile as well!
 If you're interested in the Cubase Project, please let me know.
 
 ## Changes
+
+**0.0.3**
+* Fixed a bug where gravity was not frame-independent
+* Music is now mutable (press m)
+* Improved algorithm calculating obstacle frequency
+* Improved algorithm calculating obstacle velocity
+* Improved algorithm calculating upgrade frequency
+* Balance:
+  * Increased laser probability
+  * Reduced volcano probability
 
 **0.0.2**
 * If the player hits the upper border, he will lose all velocity and all his fuel

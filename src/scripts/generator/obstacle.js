@@ -49,7 +49,7 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
             },
             velocity: 2.2,
             width: 112,
-            weight: 1
+            weight: 3
         },
         {
             name: 'brick',
@@ -97,7 +97,7 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
             width: 72,
             y: -140,
             ground: true,
-            weight: 3
+            weight: 2
         }
     ];
 
@@ -137,13 +137,18 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
 
         if (instance.threshhold < 0) {
             item = instance.weightedList.get();
-            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 7;
-            if (elapsed < 0.8) {
-                elapsed = 0.8;
-            } else if (elapsed > 2.1) {
-                elapsed = 2.1;
+            elapsed = (new Date() - instance.startTime) / 1000 / 30 + 0.5;
+            console.log(elapsed);
+            if (elapsed < 0.7) {
+                elapsed = 0.7;
+            } else if (elapsed > 2.8) {
+                elapsed = 2.8;
             }
-            instance.threshhold = 500 + Math.random() * (2000 / elapsed);
+            instance.threshhold = (500 + Math.random() * 2000) / elapsed;
+            if (elapsed > 2.4) {
+                elapsed = 2.4;
+            }
+            console.log(elapsed);
 
             thing = item.generate();
             data = {

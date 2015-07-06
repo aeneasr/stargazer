@@ -1,11 +1,12 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', 'generator/item', 'model/fuelbar', 'generator/planet', 'service/collision', 'model/backgrounds'], function ($, _, createjs, PlayerModel, ObstacleGenerator, ItemGenerator, FuelBarModel, PlanetGenerator, Collision, Backgrounds) {
+define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', 'generator/item', 'model/fuelbar', 'generator/planet', 'service/collision', 'model/backgrounds', 'service/music'], function ($, _, createjs, PlayerModel, ObstacleGenerator, ItemGenerator, FuelBarModel, PlanetGenerator, Collision, Backgrounds, Music) {
     'use strict';
     var Logic,
         instance,
         KEYCODE_SPACE = 32,
-        KEYCODE_ESCAPE = 27,
-        groundHeight = 100;
+        KEYCODE_M = 77,
+        groundHeight = 100,
+        music = new Music();
 
     function randInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
@@ -37,7 +38,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         _.each(instance.itemGenerator.objects, function (v) {
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
                 var type = v.type;
-                if (v.used){
+                if (v.used) {
                     return;
                 }
                 v.used = true;
@@ -80,6 +81,9 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
     Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.player.push(10);
+            return false;
+        } else if (e.keyCode === KEYCODE_M) {
+            music.toggleAll();
             return false;
         }
     };

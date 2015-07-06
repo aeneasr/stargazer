@@ -76,7 +76,7 @@ define(['jquery', 'underscore', 'easel', 'model/item', 'service/list'], function
         instance.threshhold -= e.delta;
 
         if (instance.threshhold < 0) {
-            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 7;
+            elapsed = (new Date() - instance.startTime) / 1000 / 60 * 5;
             if (elapsed < 0.8) {
                 elapsed = 0.8;
             } else if (elapsed > 2) {

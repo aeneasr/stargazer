@@ -15,8 +15,8 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
     };
 
     RenderService.prototype.attach = function() {
-        createjs.Ticker.addEventListener('tick', this.update.bind(this));
         createjs.Ticker.setFPS(60);
+        createjs.Ticker.addEventListener('tick', this.update.bind(this));
     };
 
     RenderService.prototype.resize = function () {

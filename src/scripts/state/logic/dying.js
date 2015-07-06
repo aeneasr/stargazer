@@ -1,9 +1,10 @@
 /*global define */
-define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds'], function ($, _, createjs, BlinkText, Backgrounds) {
+define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'service/music'], function ($, _, createjs, BlinkText, Backgrounds, Music) {
     'use strict';
     var Logic,
         instance,
-        KEYCODE_SPACE = 32;
+        KEYCODE_SPACE = 32,
+        music = new Music();
 
     function randInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
@@ -79,6 +80,9 @@ define(['jquery', 'underscore', 'easel', 'model/BlinkText', 'model/backgrounds']
     Logic.prototype.keyDown = function (e) {
         if (e.keyCode === KEYCODE_SPACE) {
             instance.state.switchState('playing');
+        } else if (e.keyCode === KEYCODE_M) {
+            music.toggleAll();
+            return false;
         }
     };
 

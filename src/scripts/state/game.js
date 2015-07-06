@@ -43,6 +43,7 @@ define(['jquery', 'underscore', 'easel', 'state/logic/dying', 'state/logic/playi
 
     GameStates.prototype.removeChild = function (child) {
         var index = this.children.indexOf(this.children);
+        delete this.children[index];
         if (index > -1) {
             this.children.splice(index, 1);
         }
