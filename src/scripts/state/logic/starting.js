@@ -23,6 +23,12 @@ define(['underscore', 'easel', 'model/BlinkText', 'model/backgrounds', 'service/
         });
         items.push(t.object);
 
+        this.versionText = new createjs.Text('0.0.5', '20px "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace', '#ffffff');
+        this.versionText.x = this.render.width/2;
+        this.versionText.textAlign = 'center';
+        this.versionText.y = this.render.height - 200;
+        items.push(this.versionText);
+
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashAudioPlugin]);
         createjs.Sound.alternateExtensions = ["mp3"];
         createjs.Sound.on("fileload", createjs.proxy(function loadHandler() {

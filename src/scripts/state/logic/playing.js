@@ -35,7 +35,7 @@ define(['jquery', 'underscore', 'easel', 'model/player', 'generator/obstacle', '
         instance.pointsText.text = instance.points;
 
         _.each(instance.generator.objects, function (v) {
-            var ticker = e.delta / 20 * 5;
+            var ticker = e.delta / 15 * 5;
             v.object.x -= v.velocity * ticker;
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
                 instance.state.switchState('dying');

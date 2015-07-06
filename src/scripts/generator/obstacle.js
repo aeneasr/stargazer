@@ -144,8 +144,8 @@ define(['jquery', 'underscore', 'easel', 'model/obstacle', 'service/list'], func
                 elapsed = 2.8;
             }
             instance.threshhold = (500 + Math.random() * 2000) / elapsed;
-            if (elapsed > 2.4) {
-                elapsed = 2.4;
+            if (elapsed > 2.2) {
+                elapsed = 2.2;
             }
 
             thing = item.generate();

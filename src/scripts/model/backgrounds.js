@@ -19,7 +19,7 @@ define(['easel', 'underscore'], function (createjs, _) {
                 if (k === 0) {
                     return;
                 }
-                v.x -= e.delta / 20 * (k + 1);
+                v.x -= e.delta / 15 * (k + 1);
                 if (v.x < -imageWidth) {
                     v.x = 0;
                 }

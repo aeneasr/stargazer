@@ -29,7 +29,7 @@ define(['jquery', 'underscore', 'easel'], function ($, _, createjs) {
                     height: 184
                 },
                 animations: {
-                    walk: [0, 5, 'walk', 0.089],
+                    walk: [0, 5, 'walk', 0.1],
                     jump: 1,
                     fall: 2
                 }

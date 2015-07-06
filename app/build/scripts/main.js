@@ -13215,7 +13215,7 @@ define('model/backgrounds',['easel', 'underscore'], function (createjs, _) {
                 if (k === 0) {
                     return;
                 }
-                v.x -= e.delta / 20 * (k + 1);
+                v.x -= e.delta / 15 * (k + 1);
                 if (v.x < -imageWidth) {
                     v.x = 0;
                 }
@@ -13446,7 +13446,7 @@ define('model/player',['jquery', 'underscore', 'easel'], function ($, _, createj
                     height: 184
                 },
                 animations: {
-                    walk: [0, 5, 'walk', 0.089],
+                    walk: [0, 5, 'walk', 0.1],
                     jump: 1,
                     fall: 2
                 }
@@ -13740,8 +13740,8 @@ define('generator/obstacle',['jquery', 'underscore', 'easel', 'model/obstacle', 
                 elapsed = 2.8;
             }
             instance.threshhold = (500 + Math.random() * 2000) / elapsed;
-            if (elapsed > 2.4) {
-                elapsed = 2.4;
+            if (elapsed > 2.2) {
+                elapsed = 2.2;
             }
 
             thing = item.generate();
@@ -14419,7 +14419,7 @@ define('state/logic/playing',['jquery', 'underscore', 'easel', 'model/player', '
         instance.pointsText.text = instance.points;
 
         _.each(instance.generator.objects, function (v) {
-            var ticker = e.delta / 20 * 5;
+            var ticker = e.delta / 15 * 5;
             v.object.x -= v.velocity * ticker;
             if (Collision.checkPixelCollision(instance.player.object, v.object)) {
                 instance.state.switchState('dying');
@@ -14530,6 +14530,12 @@ define('state/logic/starting',['underscore', 'easel', 'model/BlinkText', 'model/
             items.push(v);
         });
         items.push(t.object);
+
+        this.versionText = new createjs.Text('0.0.5', '20px "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace', '#ffffff');
+        this.versionText.x = this.render.width/2;
+        this.versionText.textAlign = 'center';
+        this.versionText.y = this.render.height - 200;
+        items.push(this.versionText);
 
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashAudioPlugin]);
         createjs.Sound.alternateExtensions = ["mp3"];
