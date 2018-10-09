@@ -3,7 +3,7 @@ stargazer
 
 ![Stargazer](https://raw.githubusercontent.com/arekkas/stargazer/master/stargazer.png "Stargazer")
 
-\>\> [**Play now!**](http://arekkas.github.io/stargazer/app) \<\<
+\>\> [**Play now!**](http://aeneasr.github.io/stargazer/app) \<\<
 
 Works best on **Chrome**. And on your touch pad / mobile as well!
 This project was an assignment for [Multimedia Programming](http://www.medien.ifi.lmu.de/lehre/ss15/mmp/) at the [LMU Munich](http://www.uni-muenchen.de/index.html).
